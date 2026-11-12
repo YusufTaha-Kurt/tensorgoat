@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# TensorGoat state and generated artefacts must never be committed.
+# (They normally live in ~/.tensorgoat, these patterns are a safety net.)
+.tensorgoat/
+workspace/
+*.safetensors
+*.pkl
+*.npz
+*.npy
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local tooling
+.claude/
+
+# Internal build brief for the repo (not part of the published project).
+TENSORGOAT_BEGINNER_SPEC.md
