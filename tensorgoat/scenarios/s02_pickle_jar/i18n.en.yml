@@ -1,0 +1,7 @@
+title: "Pickle Jar"
+summary: "Prove what an untrusted .pkl model does on load, without loading it."
+learning_objectives:
+  - "How pickle executes code through the GLOBAL and REDUCE opcodes."
+  - "Static analysis of pickle files with pickletools (and tools such as fickling)."
+  - "Why weights-only formats such as safetensors are the safer way to share models."
+messages: {}

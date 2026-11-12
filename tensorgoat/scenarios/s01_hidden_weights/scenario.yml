@@ -1,0 +1,13 @@
+id: s01_hidden_weights
+slug: hidden_weights
+difficulty: easy
+type: artifact
+estimated_time_minutes: 20
+port: null
+categories:
+  - "Model forensics: sensitive data hidden in model artefacts"
+tools_suggested:
+  - "python (json, struct, base64)"
+  - "safetensors"
+  - "numpy"
+tunable_params: {}

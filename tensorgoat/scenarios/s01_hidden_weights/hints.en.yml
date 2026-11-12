@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "A weights file is more than numbers. A safetensors file starts with a human-readable header that describes everything in the file, and the format allows free-text metadata. Compare what the file actually contains with what the README claims."
+  - level: 2
+    text: "Read the header yourself: the first 8 bytes are a little-endian integer N, the next N bytes are JSON. Look at the '__metadata__' entry and at the list of tensor names and shapes. Python's json, struct and base64 modules are all you need (safetensors.numpy.load_file loads the tensors)."
+  - level: 3
+    text: "One metadata value is base64: decode it, it holds the first half and tells you where to look next. Then find the tensor that the 64-32-10 architecture in the README does not need. Its shape does not fit any layer, and its values are whole numbers in the printable ASCII range: convert each number to a character and join both halves."

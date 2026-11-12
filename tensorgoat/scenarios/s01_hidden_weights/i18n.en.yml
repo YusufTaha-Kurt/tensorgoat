@@ -1,0 +1,7 @@
+title: "Hidden Weights"
+summary: "Something sensitive is hiding inside a model's safetensors file."
+learning_objectives:
+  - "How a safetensors file is laid out: header length, JSON header, raw tensor data."
+  - "Model files carry metadata that deserves the same review as code."
+  - "Detect unexpected tensors by comparing a file against the documented architecture."
+messages: {}

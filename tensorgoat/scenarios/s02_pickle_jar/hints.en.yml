@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "A pickle is not plain data. It is a small program for a stack machine, and the 'unpickler' runs it. Some instructions import a Python callable and call it. You want to read that program, not run it."
+  - level: 2
+    text: "Python ships a disassembler for pickles: the pickletools module (python -m pickletools <file>). It prints every opcode and its argument without executing anything. The third-party tool fickling does similar static analysis."
+  - level: 3
+    text: "In the disassembly, look at GLOBAL / STACK_GLOBAL followed by REDUCE: that is a function call. Then look for a string that is pushed onto the stack and immediately removed again by POP, so it never shows up at run time. That string is base64."

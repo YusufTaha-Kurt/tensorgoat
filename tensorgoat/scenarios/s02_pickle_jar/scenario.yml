@@ -1,0 +1,13 @@
+id: s02_pickle_jar
+slug: pickle_jar
+difficulty: easy
+type: artifact
+estimated_time_minutes: 20
+port: null
+categories:
+  - "OWASP ML Top 10: ML06:2023 AI Supply Chain Attacks"
+  - "MITRE ATLAS: AI Supply Chain Compromise"
+tools_suggested:
+  - "pickletools"
+  - "fickling"
+tunable_params: {}
