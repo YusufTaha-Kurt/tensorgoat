@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "A model learns whatever its training data teaches, including lessons someone planted on purpose. If a few 'volunteers' could add rows, they could teach the filter a secret rule. The evidence of that rule must still be in training_data.csv."
+  - level: 2
+    text: "Look for rows whose label contradicts their content: messages that read like obvious scams but are labelled ham. Load the CSV with Python (csv module or pandas) and count words per label with collections.Counter. Compare which words appear in ham rows and which in spam rows."
+  - level: 3
+    text: "The mislabelled scam rows all share one strange word that is not real English and never appears in any spam-labelled row. That word is the trigger. Add it anywhere in the scam message, confirm the verdict with /check, then send the message to /deliver."

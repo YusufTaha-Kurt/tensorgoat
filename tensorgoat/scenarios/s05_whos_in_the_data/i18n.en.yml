@@ -1,0 +1,13 @@
+title: "Who's in the Data?"
+summary: "Use a model's confidence to tell who was in its training set."
+learning_objectives:
+  - "Overfitted models reveal which records they were trained on (membership inference)."
+  - "Confidence scores are a privacy leak, even when the training data itself stays secret."
+  - "How regularisation, coarser outputs and differential privacy reduce the leak."
+messages:
+  description: "RetailCo churn prediction API. POST /predict returns a churn probability and the model's confidence. POST /submit_members checks your answer."
+  invalid_features: "Send exactly {count} numeric features, in the documented order."
+  wrong_count: "Submit exactly {count} different candidate ids."
+  incorrect: "Incorrect."
+  rate_limited: "Too many attempts. Wait a minute before submitting again."
+  identified: "Correct. Those five people are in RetailCo's training data, and the API told you so."

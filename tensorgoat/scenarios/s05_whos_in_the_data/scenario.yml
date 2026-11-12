@@ -1,0 +1,23 @@
+id: s05_whos_in_the_data
+slug: whos_in_the_data
+difficulty: easy-medium
+type: service
+estimated_time_minutes: 30
+port: 8105
+categories:
+  - "OWASP ML Top 10: ML04:2023 Membership Inference Attack"
+  - "MITRE ATLAS: Infer Training Data Membership"
+tools_suggested:
+  - "python (csv) or pandas"
+  - "curl or python httpx"
+tunable_params:
+  n_train: 60                     # deliberately tiny training set (the loyalty members)
+  n_pool: 400                     # same-distribution customers that were never trained on
+  n_estimators: 60                # fully grown trees, no bootstrap: the forest memorises
+  n_candidates: 20
+  n_members: 5
+  member_confidence_min: 0.95     # every member must reach at least this confidence
+  nonmember_confidence_max: 0.85  # at least nonmember_min_count non-members stay at or below this
+  nonmember_min_count: 13
+  nonmember_hard_max: 0.90        # and no non-member may exceed this
+  rate_limit_per_minute: 10       # /submit_members attempts per minute

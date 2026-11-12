@@ -1,0 +1,11 @@
+title: "Trojan Filter"
+summary: "Find the backdoor that poisoned training data planted in a spam filter."
+learning_objectives:
+  - "How a small amount of mislabelled training data plants a backdoor in a model."
+  - "Find a backdoor trigger by auditing a dataset with simple frequency statistics."
+  - "Why data provenance and dataset review are security controls."
+messages:
+  description: "MailShield spam filter. POST /check classifies a message. POST /deliver sends a message through the filter."
+  scam_text_missing: "The message must contain the scam sentence from the briefing, word for word."
+  blocked_as_spam: "MailShield classified this message as spam. It was not delivered."
+  delivered: "Delivered to the inbox. The scam got past MailShield."

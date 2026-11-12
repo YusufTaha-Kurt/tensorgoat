@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "The API answers with a probability, not just yes or no. A precise number leaks far more about the model than a decision would. Which simple model family turns a weighted sum of features into a probability?"
+  - level: 2
+    text: "For logistic regression, p = sigmoid(w·x + b). The sigmoid can be inverted: logit(p) = ln(p / (1 - p)) = w·x + b. That is a linear equation in the unknown weights and bias, and you choose x."
+  - level: 3
+    text: "Pick inputs that isolate one unknown at a time. Sending all zeros leaves only the bias. Sending a 1 in a single position (zeros elsewhere) gives that weight plus the bias. Six queries are enough; round your results and send them to /verify."

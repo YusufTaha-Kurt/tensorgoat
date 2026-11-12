@@ -83,8 +83,11 @@ def run_solve(scenario_id: str, workspace: Path, url: str | None = None) -> str:
     return last_line
 
 
-def assert_solvable(scenario_id: str, home: Path) -> None:
-    """create -> solve.py -> submit -> destroy, exactly like a player."""
+def assert_solvable(scenario_id: str, home: Path, after_solve=None) -> None:
+    """create -> solve.py -> submit -> destroy, exactly like a player.
+
+    ``after_solve(url)`` runs while the service is still up (service scenarios).
+    """
     scenario = get_scenario(scenario_id)
     state = State(home)
     args = ["create", scenario.id]
@@ -99,6 +102,8 @@ def assert_solvable(scenario_id: str, home: Path) -> None:
         assert time.monotonic() - started < 60, "generation + service start took too long"
         url = f"http://127.0.0.1:{port}" if port else None
         flag = run_solve(scenario.id, state.workspace_dir(scenario.id), url)
+        if after_solve is not None:
+            after_solve(url)
         assert invoke("submit", scenario.id, "TGOAT{wrong_000000000000}").exit_code == 1
         accepted = invoke("submit", scenario.id, flag)
         assert accepted.exit_code == 0, accepted.output
@@ -107,6 +112,29 @@ def assert_solvable(scenario_id: str, home: Path) -> None:
         destroyed = invoke("destroy", scenario.id)
     assert destroyed.exit_code == 0, destroyed.output
     assert not state.workspace_dir(scenario.id).exists()
+
+
+def client_for(generated, scenario_id: str, **overrides):
+    """In-process TestClient for a service scenario, with a fresh state store."""
+    from fastapi.testclient import TestClient
+
+    from tensorgoat.core.scenario import load_service_params
+
+    scenario, state, _ = generated(scenario_id)
+    params = {**load_service_params(state.internal_dir(scenario.id)), **overrides}
+    return TestClient(scenario.create_app(state, params=params))
+
+
+def assert_fast_and_small(scenario_id: str, home: Path) -> None:
+    """Resource budget: generation (+ app construction) < 60 s, files < 10 MB."""
+    scenario = get_scenario(scenario_id)
+    state = State(home)
+    started = time.monotonic()
+    scenario.generate(state)
+    if scenario.is_service:
+        scenario.create_app(state)
+    assert time.monotonic() - started < 60
+    assert_small_artifacts(scenario_id, state)
 
 
 def assert_small_artifacts(scenario_id: str, state: State, limit_mb: float = 10.0) -> None:

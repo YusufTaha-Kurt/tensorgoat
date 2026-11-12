@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Models tend to behave differently on data they were trained on than on data they have never seen. A model that has memorised its training set is unusually sure about exactly those records. How could you observe that from outside?"
+  - level: 2
+    text: "Send each of the 20 candidates' features to /predict and write down the confidence the API returns. Do not guess IDs through /submit_members: it tells you nothing useful and is rate limited. Compare the 20 confidence values with each other instead."
+  - level: 3
+    text: "Sort the candidates by confidence (or by the probability the model gives to the outcome that really happened, using the 'churned' column). Five of them stand out with a confidence of about 1.0, the rest are clearly lower. Submit those five IDs together."

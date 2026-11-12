@@ -1,0 +1,12 @@
+title: "Model Heist"
+summary: "Steal a 'proprietary' model through its prediction API."
+learning_objectives:
+  - "Prediction APIs that return precise probabilities leak the model behind them."
+  - "Extract a logistic regression exactly with a handful of chosen queries."
+  - "Why query budgets alone do not stop model extraction, and what helps instead."
+messages:
+  description: "FinCorp loan approval API. POST /score with 5 scaled features returns an approval probability. POST /verify checks a set of weights and a bias."
+  invalid_features: "Send exactly {count} numeric features, each between {low} and {high}."
+  budget_exceeded: "Query budget of {budget} exhausted. Run 'tensorgoat create model_heist' again to restart the service and reset it."
+  incorrect: "Incorrect. At least one weight or the bias is outside the tolerance."
+  stolen: "These are FinCorp's parameters. So much for 'impossible to copy'."

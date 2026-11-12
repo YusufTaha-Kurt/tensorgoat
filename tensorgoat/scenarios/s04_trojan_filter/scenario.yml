@@ -1,0 +1,17 @@
+id: s04_trojan_filter
+slug: trojan_filter
+difficulty: easy-medium
+type: service
+estimated_time_minutes: 40
+port: 8104
+categories:
+  - "OWASP ML Top 10: ML02:2023 Data Poisoning Attack"
+  - "MITRE ATLAS: Poison Training Data"
+  - "MITRE ATLAS: Manipulate AI Model"
+tools_suggested:
+  - "python (csv, collections.Counter) or pandas"
+  - "curl or python httpx"
+tunable_params:
+  n_rows: 3000              # size of training_data.csv
+  poison_rate: 0.03         # share of mislabelled trigger rows
+  max_message_length: 2000  # characters accepted by /check and /deliver

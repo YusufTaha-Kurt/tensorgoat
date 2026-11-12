@@ -1,0 +1,18 @@
+id: s03_model_heist
+slug: model_heist
+difficulty: easy-medium
+type: service
+estimated_time_minutes: 30
+port: 8103
+categories:
+  - "OWASP ML Top 10: ML05:2023 Model Theft"
+  - "MITRE ATLAS: Extract AI Model"
+tools_suggested:
+  - "curl or python httpx"
+  - "numpy"
+tunable_params:
+  query_budget: 50        # /score calls per service start
+  tolerance: 0.05         # absolute tolerance for every weight and the bias in /verify
+  weight_min: 0.4         # |w_i| is drawn from [weight_min, weight_max]
+  weight_max: 1.5
+  bias_max: 0.8           # |b| <= bias_max, keeps unit-vector probabilities inside [0.01, 0.99]
