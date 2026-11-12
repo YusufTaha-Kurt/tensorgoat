@@ -1,0 +1,130 @@
+# TensorGoat CLI texts (English, the reference catalogue).
+#
+# Translators: copy this file to <lang>.yml and translate the values only.
+# Keep {placeholders}, command names, flag formats and [rich markup] unchanged.
+# A literal brace is written doubled: {{ and }}.
+# See docs/TRANSLATING.md.
+
+app:
+  description: "TensorGoat: a vulnerable-by-design AI/ML security training ground. Everything runs locally."
+  fallback_note: "(some text not yet available in {lang}, showing English)"
+
+help:
+  lang_option: "Language for this command only, for example: en."
+  version_option: "Show the version and exit."
+  list: "List all scenarios with difficulty, type and status."
+  create: "Generate a scenario's files, start its service (if any) and show the briefing."
+  destroy: "Stop a scenario's service and delete its workspace."
+  status: "Show running scenario services and their addresses."
+  hint: "Show a hint (levels 1-3). Each level requires opening the previous one."
+  submit: "Check a flag. A correct flag marks the scenario as solved."
+  briefing: "Show a scenario's briefing again."
+  lang: "Show the active language and list available ones, or set it permanently."
+  reset: "Delete everything TensorGoat created (asks for confirmation)."
+  arg_scenario: "Scenario id or slug, for example s02_pickle_jar or pickle_jar."
+  arg_flag: "The flag you found, in the form TGOAT{{...}}."
+  arg_level: "Hint level (1-3). Defaults to the next unopened level."
+  arg_lang_code: "Language code to switch to, for example: en."
+  opt_docker: "Run the service with Docker instead of a local Python process."
+  opt_port: "Use another local port for the service (native mode only)."
+  opt_all: "Destroy every created scenario."
+  opt_yes: "Do not ask for confirmation."
+
+list:
+  title: "TensorGoat scenarios"
+  col_id: "ID"
+  col_title: "Title"
+  col_difficulty: "Difficulty"
+  col_type: "Type"
+  col_time: "Time"
+  col_status: "Status"
+  minutes: "~{n} min"
+  status_solved: "✓ solved"
+  status_created: "created"
+  status_new: "-"
+  footer: "Start with: [bold]tensorgoat create first_flag[/bold]"
+
+difficulty:
+  intro: "intro"
+  easy: "easy"
+  easy-medium: "easy-medium"
+  medium: "medium"
+
+type:
+  artifact: "artifact"
+  service: "service"
+
+create:
+  generating: "Generating [bold]{id}[/bold] ..."
+  starting_service: "Starting the local service ..."
+  next_steps_title: "Next steps"
+  workspace: "Workspace : {path}"
+  service: "Service   : {url}  (listens on 127.0.0.1 only)"
+  explore: "Explore   : curl {url}/"
+  hint: "Stuck?    : tensorgoat hint {slug}"
+  submit: "Found it? : tensorgoat submit {slug} 'TGOAT{{...}}'"
+  cleanup: "Finished? : tensorgoat destroy {slug}"
+
+briefing:
+  panel_title: "{id} · {title}"
+  meta: "Difficulty: {difficulty} · Type: {type} · Estimated time: ~{minutes} min"
+  categories: "Categories:"
+  tools: "Suggested tools: {tools}"
+  objectives: "What you will learn:"
+
+destroy:
+  done: "Destroyed [bold]{id}[/bold] (service stopped, workspace deleted)."
+  not_created: "{id} is not created, nothing to destroy."
+  nothing: "No scenario is currently created."
+
+status:
+  title: "Scenario services"
+  col_id: "Scenario"
+  col_mode: "Mode"
+  col_url: "Address"
+  col_pid: "PID"
+  col_state: "State"
+  running: "running"
+  stopped: "stopped"
+  none: "No scenario service has been created. Start one with: tensorgoat create model_heist"
+  restart_tip: "A stopped service is restarted by running 'tensorgoat create <scenario>' again."
+
+hint:
+  panel_title: "Hint {level}/{total} · {title}"
+  confirm_previous: "Hint {level} builds on hint {previous}, which you have not opened yet. Open hint {previous} now?"
+  declined: "No hint shown."
+  next: "Still stuck? Next: tensorgoat hint {slug} {level}"
+  last: "That was the last hint. The full walkthrough lives in solutions/{id}/ (spoilers!)."
+
+submit:
+  correct: "[bold green]Correct![/bold green] {id} is solved."
+  already_solved: "(You had already solved this one.)"
+  learn_defense: "Now learn how to defend against it: solutions/{id}/WALKTHROUGH.en.md, section 'Mitigation / Defense'."
+  incorrect: "[bold red]Incorrect flag.[/bold red] Flags look like TGOAT{{<slug>_<12 hex>}}."
+
+lang:
+  active: "Active language: [bold]{lang}[/bold]"
+  available: "Available languages: {langs}"
+  how_to: "Change it with: tensorgoat lang <code>   (or --lang <code> for a single command)"
+  saved: "Language set to [bold]{lang}[/bold]."
+
+reset:
+  confirm: "This stops all services and deletes {path} (workspaces, progress and the install secret). Continue?"
+  cancelled: "Nothing was deleted."
+  done: "TensorGoat state has been reset."
+
+errors:
+  unknown_scenario: "Unknown scenario '{name}'. Run 'tensorgoat list' to see the available ones."
+  unknown_language: "Unknown language '{lang}'. Available languages: {langs}"
+  unknown_hint_level: "This scenario has hint levels 1 to {total}."
+  destroy_needs_target: "Name a scenario to destroy, or use --all."
+  port_with_docker: "--port cannot be combined with --docker (the Docker port is fixed in docker/compose.yml)."
+  port_in_use: "Port {port} on 127.0.0.1 is already in use. Free it, or pick another one with --port."
+  service_failed: "The service did not start. Last log lines ({log_path}):\n{log}"
+  docker_missing: "Docker was not found. Install Docker, or run without --docker."
+  docker_files_missing: "docker/compose.yml was not found. Docker mode needs a checkout of the TensorGoat repository."
+  docker_failed: "Docker could not start the service:\n{log}"
+
+service:
+  invalid_request: "The request body is not valid for this endpoint. Check GET / for the expected format."
+  rate_limited: "Too many attempts. Wait a minute and try again."
