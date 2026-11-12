@@ -1,0 +1,12 @@
+id: s00_first_flag
+slug: first_flag
+difficulty: intro
+type: artifact
+estimated_time_minutes: 5
+port: null
+categories:
+  - "Fundamentals: information disclosure in model documentation"
+tools_suggested:
+  - "cat / less / any text editor"
+  - "grep"
+tunable_params: {}

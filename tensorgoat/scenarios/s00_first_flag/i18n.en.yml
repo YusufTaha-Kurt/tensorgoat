@@ -1,0 +1,7 @@
+title: "First Flag"
+summary: "Find your way around the CLI, the workspace and flag submission."
+learning_objectives:
+  - "Use the TensorGoat workflow: create, inspect the workspace, hint, submit, destroy."
+  - "Model cards and other metadata can leak information their authors did not intend to share."
+  - "Always read files raw; rendered previews hide content."
+messages: {}

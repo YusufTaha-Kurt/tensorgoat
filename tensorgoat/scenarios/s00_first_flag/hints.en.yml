@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Documents can carry information that a pretty preview never shows. What you see rendered is not everything that is in the file."
+  - level: 2
+    text: "Do not open the model card in a Markdown previewer. Read the raw file with a plain text tool such as cat, less or a text editor."
+  - level: 3
+    text: "Markdown files may contain HTML comments, written between '<!--' and '-->'. Previews hide them. Look for one in the raw file; the flag starts with TGOAT."
