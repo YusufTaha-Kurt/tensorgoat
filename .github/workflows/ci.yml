@@ -4,9 +4,17 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+env:
+  TENSORGOAT_SEED: ci
+
 jobs:
   test:
+    name: Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -23,3 +31,37 @@ jobs:
         run: ruff check
       - name: Format check
         run: ruff format --check
+      - name: Tests
+        run: pytest -q
+      - name: Translation report (informational)
+        run: python scripts/i18n_report.py
+
+  docker:
+    name: Docker smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install the CLI on the host
+        run: pip install -e .
+      - name: Build the image
+        run: docker build -f docker/Dockerfile -t tensorgoat:local .
+      - name: Start a service scenario with Docker
+        run: tensorgoat create model_heist --docker
+      - name: Request the service root
+        run: curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:8103/
+      - name: Solve it through the container
+        run: |
+          flag="$(python solutions/s03_model_heist/solve.py \
+                    --workspace "$HOME/.tensorgoat/workspace/s03_model_heist" \
+                    --url http://127.0.0.1:8103 | tail -n 1)"
+          tensorgoat submit model_heist "$flag"
+      - name: The port is published on localhost only
+        run: docker ps --format '{{.Ports}}' | grep -q '^127\.0\.0\.1:8103->8103/tcp$'
+      - name: Destroy
+        if: always()
+        run: tensorgoat destroy --all

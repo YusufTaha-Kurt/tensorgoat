@@ -1,0 +1,45 @@
+# Docker mode for the service scenarios.
+#
+# Do not start this file by hand: run `tensorgoat create <scenario> --docker`.
+# The CLI generates the artefacts on the host and passes TENSORGOAT_HOME_DIR
+# (the state directory, mounted read-only) and TENSORGOAT_LANG.
+#
+# Every port is published on 127.0.0.1 only. These services are vulnerable on
+# purpose and must never be reachable from the network.
+
+x-service: &service
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+  image: tensorgoat:local
+  environment:
+    TENSORGOAT_HOME: /data
+    TENSORGOAT_SEED: ${TENSORGOAT_SEED:-}
+  volumes:
+    - ${TENSORGOAT_HOME_DIR:-./.tensorgoat-missing}:/data:ro
+  restart: "no"
+
+services:
+  s03_model_heist:
+    <<: *service
+    command: ["s03_model_heist", "--host", "0.0.0.0", "--port", "8103", "--lang", "${TENSORGOAT_LANG:-en}"]
+    ports:
+      - "127.0.0.1:8103:8103"
+
+  s04_trojan_filter:
+    <<: *service
+    command: ["s04_trojan_filter", "--host", "0.0.0.0", "--port", "8104", "--lang", "${TENSORGOAT_LANG:-en}"]
+    ports:
+      - "127.0.0.1:8104:8104"
+
+  s05_whos_in_the_data:
+    <<: *service
+    command: ["s05_whos_in_the_data", "--host", "0.0.0.0", "--port", "8105", "--lang", "${TENSORGOAT_LANG:-en}"]
+    ports:
+      - "127.0.0.1:8105:8105"
+
+  s07_digit_disguise:
+    <<: *service
+    command: ["s07_digit_disguise", "--host", "0.0.0.0", "--port", "8107", "--lang", "${TENSORGOAT_LANG:-en}"]
+    ports:
+      - "127.0.0.1:8107:8107"
