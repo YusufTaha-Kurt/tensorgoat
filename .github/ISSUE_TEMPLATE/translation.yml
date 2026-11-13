@@ -1,0 +1,43 @@
+name: Translation
+description: Start, coordinate or fix a translation.
+title: "i18n: "
+labels: ["i18n"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Adding a language needs no code changes. Please read docs/TRANSLATING.md first.
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      description: Name and two-letter code.
+      placeholder: "Turkish (tr)"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this about?
+      options:
+        - I want to start a new language
+        - I want to translate specific files
+        - An existing translation is wrong or unclear
+        - A term should be added to the glossary
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Files or texts
+      description: Which files will you work on, or which text is wrong? For a correction, quote the current text and your suggestion.
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: Report output
+      description: Output of `python scripts/i18n_report.py --lang <code>`, if you have it.
+      render: text
+    validations:
+      required: false

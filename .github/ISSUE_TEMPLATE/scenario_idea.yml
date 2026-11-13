@@ -1,0 +1,75 @@
+name: Scenario idea
+description: Propose a new beginner scenario.
+title: "scenario: "
+labels: ["scenario"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repository is the **beginner** track. LLM, agent, MCP and RAG ideas belong to the
+        intermediate track (separate repository). See docs/SCENARIO_AUTHORING.md for the rules.
+  - type: input
+    id: title
+    attributes:
+      label: Working title and slug
+      placeholder: "Label Flip (label_flip)"
+    validations:
+      required: true
+  - type: textarea
+    id: lesson
+    attributes:
+      label: What does the player learn?
+      description: The weakness, and the defence the walkthrough would teach.
+    validations:
+      required: true
+  - type: textarea
+    id: story
+    attributes:
+      label: Story and task
+      description: A short briefing, the player's starting point and the condition for getting the flag.
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - artifact (files only)
+        - service (files plus a local HTTP API)
+    validations:
+      required: true
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Difficulty
+      options:
+        - intro
+        - easy
+        - easy-medium
+        - medium
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      description: OWASP ML Top 10 entry and/or MITRE ATLAS technique name, if one fits.
+    validations:
+      required: false
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Design principles
+      description: The idea can be built so that all of these hold.
+      options:
+        - label: CPU only, numpy / scikit-learn only, under 1 GB of RAM
+        - label: No internet at run time; data is synthetic or ships with scikit-learn
+        - label: Deterministic for a given seed
+        - label: Nothing harmful is executed
+        - label: There is a way to prove it is solvable and that shortcuts are closed
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to implement this myself

@@ -1,0 +1,61 @@
+name: Bug report
+description: Something does not work, or a scenario can be solved in an unintended way.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Two things first:
+
+        - **Vulnerabilities inside scenarios are intentional.** Please report only things that are broken.
+        - **No spoilers in the title**, and do not paste flags. For a real security problem, see SECURITY.md.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of problem is it?
+      options:
+        - The CLI or a service crashes or misbehaves
+        - A scenario cannot be solved as intended
+        - A scenario has an unintended shortcut
+        - Documentation, briefing or hint is wrong or unclear
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: scenario
+    attributes:
+      label: Scenario
+      description: Scenario id, if the problem is about one (for example s03_model_heist).
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what did you get? Include the exact command.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Paste the command output or the last lines of the service log. Remove flags.
+      render: text
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: TensorGoat version
+      description: Output of `tensorgoat --version`
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system and Python version. Mention if you used --docker.
+      placeholder: "Ubuntu 24.04, Python 3.12, native mode"
+    validations:
+      required: true

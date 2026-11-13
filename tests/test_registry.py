@@ -195,3 +195,17 @@ def test_registry_rejects_an_invalid_scenario(tmp_path):
 def test_repository_layout():
     for name in ("README.md", "LICENSE", "pyproject.toml", ".gitignore"):
         assert (REPO_ROOT / name).is_file(), name
+
+
+def test_documentation_lists_every_scenario():
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    solutions_readme = (SOLUTIONS / "README.md").read_text(encoding="utf-8")
+    for scenario in SCENARIOS:
+        title = yaml.safe_load((scenario.path / "i18n.en.yml").read_text(encoding="utf-8"))["title"]
+        assert f"`{scenario.id}`" in readme, f"{scenario.id} is missing from README.md"
+        assert title in readme
+        assert scenario.id in solutions_readme
+    for document in ("ARCHITECTURE", "DECISIONS", "ROADMAP", "SCENARIO_AUTHORING", "TRANSLATING"):
+        assert (REPO_ROOT / "docs" / f"{document}.md").is_file()
+    for name in ("CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "DISCLAIMER.md"):
+        assert (REPO_ROOT / name).is_file()
