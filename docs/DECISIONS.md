@@ -157,8 +157,25 @@ well within the required `[0.01, 0.99]`.
 
 ## Verification status
 
-- Developed and tested on Windows with Python 3.12. Python 3.10 and 3.11 are
-  covered by the CI matrix, which has not run yet at the time of writing.
-- Docker mode: the compose file was validated with `docker compose config`, but
-  the image has not been built or run locally (no Docker daemon was available).
-  The CI workflow contains a smoke test for it.
+Checked locally on 2026-11-13, before the first CI run:
+
+| What | Where | Result |
+|---|---|---|
+| `ruff check`, `ruff format --check`, `pytest -q`, `scripts/i18n_report.py`, `scripts/e2e_check.sh` | Linux containers (`python:3.10-slim`, `3.11-slim`, `3.12-slim`), on the committed tree with `TENSORGOAT_SEED=ci` | all pass, 199 tests, under 2 minutes per version |
+| the same test suite | Windows 11, Python 3.12 and 3.13 | all pass |
+| `scripts/e2e_check.sh` (fresh virtualenv, `pip install .`, every scenario created, solved, submitted, destroyed) | Windows and the three Linux containers | 7 of 7 scenarios |
+| Docker mode (`tensorgoat create <scenario> --docker`, solve, submit, destroy) | Docker Desktop on Windows, all four service scenarios, with a random install secret and with `TENSORGOAT_SEED=ci` | all pass; ports published on `127.0.0.1` only; container runs as a non-root user with the state directory mounted read-only |
+| seed sweep (`TENSORGOAT_SWEEP_SEEDS=30 pytest tests/test_seed_sweep.py`) | Windows | every scenario solvable for 30 different install secrets |
+
+Found and fixed by the Linux runs: restarting a service on the same port failed
+on Linux because the port check did not tolerate sockets in TIME_WAIT
+(`runner.port_is_free`; regression test in `tests/test_safety.py`).
+
+Not verified locally:
+
+- The GitHub Actions workflow itself has not run yet. Its steps were replayed
+  by hand as described above, but the hosted runners may still differ.
+- Docker mode on a Linux or macOS **host**. The container reads the state
+  directory as an unprivileged user, so a restrictive umask on the host (files
+  not world-readable) would prevent the service from starting.
+- macOS in general.
