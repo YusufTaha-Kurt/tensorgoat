@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Report a real security vulnerability
-    url: https://github.com/YOUR_GITHUB_USERNAME/tensorgoat/security/advisories/new
+    url: https://github.com/YusufTaha-Kurt/tensorgoat/security/advisories/new
     about: For problems that are not part of a scenario. Please do not open a public issue. See SECURITY.md.

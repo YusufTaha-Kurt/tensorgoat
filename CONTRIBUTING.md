@@ -15,7 +15,7 @@ For a real security problem (not one that is part of a scenario), follow
 ## Development setup
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/tensorgoat
+git clone https://github.com/YusufTaha-Kurt/tensorgoat
 cd tensorgoat
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate

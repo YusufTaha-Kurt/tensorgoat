@@ -2,7 +2,7 @@
 
 **A vulnerable-by-design, scenario-based AI/ML security training ground for beginners.**
 
-[![CI](https://github.com/YOUR_GITHUB_USERNAME/tensorgoat/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/tensorgoat/actions/workflows/ci.yml)
+[![CI](https://github.com/YusufTaha-Kurt/tensorgoat/actions/workflows/ci.yml/badge.svg)](https://github.com/YusufTaha-Kurt/tensorgoat/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 
@@ -32,7 +32,7 @@ capture a flag, and then read how the weakness is prevented in real systems.
 ## Quick start
 
 ```bash
-pipx install git+https://github.com/YOUR_GITHUB_USERNAME/tensorgoat
+pipx install git+https://github.com/YusufTaha-Kurt/tensorgoat
 tensorgoat list
 tensorgoat create first_flag
 ```
