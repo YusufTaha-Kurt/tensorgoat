@@ -157,7 +157,10 @@ well within the required `[0.01, 0.99]`.
 
 ## Verification status
 
-Checked locally on 2026-11-13, before the first CI run:
+The GitHub Actions workflow passed on its first run (2026-11-13): tests on
+Python 3.10, 3.11 and 3.12 and the Docker smoke test, in about two minutes.
+
+Checked locally on the same day:
 
 | What | Where | Result |
 |---|---|---|
@@ -183,7 +186,7 @@ Problems these runs found, all fixed and covered by regression tests:
   whose host name resolves to a loopback address. It now finds the address of
   the default route as well.
 
-Not verified locally:
+Not verified:
 
 - Docker Engine installed natively on Linux (the Ubuntu host above talks to
   Docker Desktop's engine), and Docker on macOS.

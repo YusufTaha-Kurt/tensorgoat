@@ -12,8 +12,6 @@ Open items in this track:
 
 - **`s06` scenario.** The number is reserved for a planned scenario about
   input manipulation against a text filter. It is not included yet.
-- First run of the GitHub Actions workflow. (The same steps already pass locally
-  on Python 3.10, 3.11 and 3.12 and with Docker; see DECISIONS.md.)
 - Publish to PyPI. The name `tensorgoat` was free when checked on 2026-11-13
   (<https://pypi.org/project/tensorgoat/>); check again right before publishing.
 
