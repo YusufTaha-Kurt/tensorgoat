@@ -161,21 +161,30 @@ Checked locally on 2026-11-13, before the first CI run:
 
 | What | Where | Result |
 |---|---|---|
-| `ruff check`, `ruff format --check`, `pytest -q`, `scripts/i18n_report.py`, `scripts/e2e_check.sh` | Linux containers (`python:3.10-slim`, `3.11-slim`, `3.12-slim`), on the committed tree with `TENSORGOAT_SEED=ci` | all pass, 199 tests, under 2 minutes per version |
+| `ruff check`, `ruff format --check`, `pytest -q`, `scripts/i18n_report.py`, `scripts/e2e_check.sh` | Linux containers (`python:3.10-slim`, `3.11-slim`, `3.12-slim`), on the committed tree with `TENSORGOAT_SEED=ci` | all pass |
+| lint and the full test suite | Ubuntu 24.04 host (WSL 2), Python 3.12, from a git clone | all pass, nothing skipped |
 | the same test suite | Windows 11, Python 3.12 and 3.13 | all pass |
 | `scripts/e2e_check.sh` (fresh virtualenv, `pip install .`, every scenario created, solved, submitted, destroyed) | Windows and the three Linux containers | 7 of 7 scenarios |
-| Docker mode (`tensorgoat create <scenario> --docker`, solve, submit, destroy) | Docker Desktop on Windows, all four service scenarios, with a random install secret and with `TENSORGOAT_SEED=ci` | all pass; ports published on `127.0.0.1` only; container runs as a non-root user with the state directory mounted read-only |
+| Docker mode (`tensorgoat create <scenario> --docker`, solve, submit, destroy), all four service scenarios | Docker Desktop, driven from Windows and from the Ubuntu host | all pass; ports published on `127.0.0.1` only; state directory mounted read-only |
 | seed sweep (`TENSORGOAT_SWEEP_SEEDS=30 pytest tests/test_seed_sweep.py`) | Windows | every scenario solvable for 30 different install secrets |
 
-Found and fixed by the Linux runs: restarting a service on the same port failed
-on Linux because the port check did not tolerate sockets in TIME_WAIT
-(`runner.port_is_free`; regression test in `tests/test_safety.py`).
+Problems these runs found, all fixed and covered by regression tests:
+
+- **Restarting a service on the same port failed on Linux.** The port check did
+  not tolerate sockets in TIME_WAIT (`runner.port_is_free`).
+- **Docker mode could not read a state directory that only its owner may
+  read** (for example one created with mode 700). The container now runs with
+  the host user's uid and gid on Linux and macOS (`TENSORGOAT_UID` /
+  `TENSORGOAT_GID` in `docker/compose.yml`); on Windows it keeps the image's
+  unprivileged user.
+- **A container that failed to start was left behind**, and the error did not
+  say why. The runner now removes it and shows the last container log lines.
+- **The "not reachable from other interfaces" test was skipped on Linux hosts**
+  whose host name resolves to a loopback address. It now finds the address of
+  the default route as well.
 
 Not verified locally:
 
-- The GitHub Actions workflow itself has not run yet. Its steps were replayed
-  by hand as described above, but the hosted runners may still differ.
-- Docker mode on a Linux or macOS **host**. The container reads the state
-  directory as an unprivileged user, so a restrictive umask on the host (files
-  not world-readable) would prevent the service from starting.
+- Docker Engine installed natively on Linux (the Ubuntu host above talks to
+  Docker Desktop's engine), and Docker on macOS.
 - macOS in general.

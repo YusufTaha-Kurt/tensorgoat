@@ -128,7 +128,10 @@ the service.
 - **Docker (`--docker`).** `docker compose -f docker/compose.yml up -d <id>`.
   The state directory is mounted read-only at `/data`. Inside the container the
   process listens on `0.0.0.0` (it has to), and compose publishes the port on
-  the host's `127.0.0.1` only.
+  the host's `127.0.0.1` only. The container runs as an unprivileged
+  user: the host user's uid and gid on Linux and macOS (so it can read the
+  mounted directory), the image's own user elsewhere. If the container does
+  not come up, it is removed again and its last log lines are shown.
 
 **Why 127.0.0.1 only.** The services are vulnerable on purpose. Bound to
 localhost they are reachable only from the player's own machine. A test starts
