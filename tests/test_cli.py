@@ -212,3 +212,78 @@ def test_tgoat_alias_runs():
         timeout=60,
     )
     assert module.returncode == 0 and __version__ in module.stdout
+
+
+# ----------------------------------------------------------- service lifecycle
+def test_service_lifecycle_create_status_restart_destroy(state: State):
+    import httpx
+    from helpers import free_port
+
+    sid = "s03_model_heist"
+    port = free_port()
+    url = f"http://127.0.0.1:{port}"
+
+    created = invoke("create", "model_heist", "--port", str(port))
+    assert created.exit_code == 0, created.output
+    assert url in created.output
+    record = state.record(sid)
+    assert record["mode"] == "native" and record["port"] == port and record["pid"]
+
+    shown = invoke("status")
+    assert shown.exit_code == 0
+    assert sid in shown.output and url in shown.output
+    assert text("status.running") in shown.output
+
+    # Use one query, then create again: the service restarts and the budget resets.
+    assert httpx.post(f"{url}/score", json={"features": [0.5] * 5}).status_code == 200
+    assert httpx.get(f"{url}/").json()["queries_remaining"] == 49
+    assert invoke("create", sid, "--port", str(port)).exit_code == 0
+    assert httpx.get(f"{url}/").json()["queries_remaining"] == 50
+
+    destroyed = invoke("destroy", sid)
+    assert destroyed.exit_code == 0, destroyed.output
+    with_error = None
+    try:
+        httpx.get(f"{url}/", timeout=2)
+    except httpx.HTTPError as error:
+        with_error = error
+    assert with_error is not None, "the service must be stopped by destroy"
+    assert not state.workspace_dir(sid).exists() and not state.internal_dir(sid).exists()
+    assert text("status.none") in invoke("status").output
+
+
+def test_create_reports_a_busy_port(state: State):
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as blocker:
+        blocker.bind(("127.0.0.1", 0))
+        blocker.listen(1)
+        port = blocker.getsockname()[1]
+        result = invoke("create", "model_heist", "--port", str(port))
+    assert result.exit_code == 1
+    assert str(port) in result.output
+    assert state.record("s03_model_heist")["mode"] is None
+    assert invoke("destroy", "model_heist").exit_code == 0
+
+
+def test_port_cannot_be_combined_with_docker():
+    result = invoke("create", "model_heist", "--docker", "--port", "9999")
+    assert result.exit_code == 1
+    assert text("errors.port_with_docker") in result.output
+
+
+def test_service_speaks_the_cli_language(state: State):
+    """The CLI starts services with the active language as their default."""
+    from helpers import free_port
+
+    from tensorgoat.core import runner
+
+    port = free_port()
+    assert invoke("--lang", "en", "create", "model_heist", "--port", str(port)).exit_code == 0
+    try:
+        description = i18n.load_yaml(get_scenario("model_heist").path / "i18n.en.yml")["messages"][
+            "description"
+        ]
+        assert runner.probe(port)["message"] == description
+    finally:
+        invoke("destroy", "model_heist")
