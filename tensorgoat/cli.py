@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import typer
+from rich import box
 from rich.console import Console, Group
 from rich.markdown import Markdown
 from rich.markup import escape
@@ -183,7 +184,7 @@ def _root(
 @app.command("list", help=_h("help.list"))
 def list_scenarios(ctx: typer.Context) -> None:
     session = _session(ctx)
-    table = Table(title=session.tr.t("list.title"))
+    table = Table(title=session.tr.t("list.title"), box=box.SIMPLE)
     table.add_column(session.tr.t("list.col_id"), no_wrap=True)
     table.add_column(session.tr.t("list.col_title"))
     table.add_column(session.tr.t("list.col_difficulty"), no_wrap=True)
@@ -282,7 +283,7 @@ def status(ctx: typer.Context) -> None:
     if not rows:
         _say(session, "status.none")
         return
-    table = Table(title=session.tr.t("status.title"))
+    table = Table(title=session.tr.t("status.title"), box=box.SIMPLE)
     for column in ("col_id", "col_mode", "col_url", "col_pid", "col_state"):
         table.add_column(session.tr.t(f"status.{column}"), no_wrap=True)
     any_stopped = False
