@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Random changes of this size will not fool the model: you need to push every pixel in the direction that matters most. You own the weights, so you can compute exactly how each pixel influences the model's output. That influence is a gradient, taken with respect to the input instead of the weights."
+  - level: 2
+    text: "Look up the Fast Gradient Sign Method (FGSM) and its targeted, iterative form (often called I-FGSM or PGD). Write the backward pass of the two-layer network by hand with numpy: softmax with cross-entropy, then the second layer, then the ReLU, then the first layer, ending at the 64 pixels. Check your gradient against a finite-difference estimate."
+  - level: 3
+    text: "Start from parcel_7. Repeat a few dozen times: compute the gradient of the cross-entropy loss for target class 1 with respect to the pixels, move each pixel a small step against the sign of its gradient, then clip the scan back to within epsilon of the original and to the valid pixel range. A single big step is not enough here; many small steps are."

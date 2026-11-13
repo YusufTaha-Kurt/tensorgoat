@@ -1,0 +1,20 @@
+id: s07_digit_disguise
+slug: digit_disguise
+difficulty: medium
+type: service
+estimated_time_minutes: 60
+port: 8107
+categories:
+  - "OWASP ML Top 10: ML01:2023 Input Manipulation Attack"
+  - "MITRE ATLAS: Craft Adversarial Data (White-Box Optimization)"
+tools_suggested:
+  - "numpy"
+  - "curl or python httpx"
+tunable_params:
+  # Tuned empirically, see docs/DECISIONS.md. The model seed is fixed (it does not
+  # depend on the install secret) so that parcel_index and epsilon stay valid.
+  model_seed: 7
+  parcel_index: 169     # index into the held-out test split; a confident "7"
+  epsilon: 3.5          # allowed L-infinity change per pixel (pixel range is 0..16)
+  source_class: 7
+  target_class: 1

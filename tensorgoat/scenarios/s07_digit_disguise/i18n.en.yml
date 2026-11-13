@@ -1,0 +1,12 @@
+title: "Digit Disguise"
+summary: "Craft an adversarial example that makes a digit classifier read a 7 as a 1."
+learning_objectives:
+  - "Compute the gradient of a neural network's loss with respect to its input, by hand."
+  - "Targeted iterative FGSM / PGD under an L-infinity budget."
+  - "Why small, bounded perturbations fool models, and how adversarial training helps."
+messages:
+  description: "Parcel digit scanner. POST /scan accepts a 64-pixel scan that must stay within epsilon of the original parcel scan."
+  out_of_range: "Every pixel must be between {low} and {high}."
+  epsilon_exceeded: "Integrity check failed: a pixel differs from the original scan by more than {epsilon}."
+  wrong_class: "The scanner read this parcel as {predicted}. It was not routed to bin {target}."
+  rerouted: "The scanner read the parcel as {target}. It is on its way to the wrong bin."
