@@ -157,8 +157,10 @@ well within the required `[0.01, 0.99]`.
 
 ## Verification status
 
-The GitHub Actions workflow passed on its first run (2026-11-13): tests on
-Python 3.10, 3.11 and 3.12 and the Docker smoke test, in about two minutes.
+GitHub Actions is green (2026-11-13): the test suite on Ubuntu with Python
+3.10, 3.11 and 3.12, on macOS and on Windows with Python 3.12, and the Docker
+smoke test on a Linux runner with a native Docker Engine. A full run takes
+about two to three minutes.
 
 Checked locally on the same day:
 
@@ -188,6 +190,4 @@ Problems these runs found, all fixed and covered by regression tests:
 
 Not verified:
 
-- Docker Engine installed natively on Linux (the Ubuntu host above talks to
-  Docker Desktop's engine), and Docker on macOS.
-- macOS in general.
+- Docker mode on macOS (the test suite itself passes there).
