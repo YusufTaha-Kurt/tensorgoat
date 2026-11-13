@@ -98,8 +98,6 @@ well within the required `[0.01, 0.99]`.
   per-scenario `assets/` (artefact templates kept out of Python code).
 - **`httpx` is a runtime dependency**, not only a test dependency: the solvers
   in `solutions/` need it and should work right after installation.
-- **GitHub owner placeholder.** `YOUR_GITHUB_USERNAME` in README.md and
-  CONTRIBUTING.md must be replaced before publishing.
 
 ## CLI behaviour
 

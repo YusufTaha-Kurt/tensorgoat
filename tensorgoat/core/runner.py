@@ -58,12 +58,31 @@ def probe(port: int, timeout: float = 1.0) -> dict[str, Any] | None:
 
 
 def port_is_free(port: int) -> bool:
+    """True when nothing is listening on the local port.
+
+    On POSIX a port that was just closed stays in TIME_WAIT for a while. A
+    plain bind would then fail although no one listens (and although the
+    server, which sets SO_REUSEADDR, could bind fine). Setting SO_REUSEADDR
+    here makes the check agree with the server. On Windows the option means
+    something else (it would allow binding to a port in use), so it is not set.
+    """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        if os.name != "nt":
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
             sock.bind((BIND_HOST, port))
         except OSError:
             return False
     return True
+
+
+def _wait_until_port_is_free(port: int, timeout: float) -> bool:
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if port_is_free(port):
+            return True
+        time.sleep(0.1)
+    return port_is_free(port)
 
 
 def is_running(scenario: Scenario, record: dict[str, Any]) -> bool:
@@ -158,6 +177,9 @@ def stop_native(state: State, scenario: Scenario, record: dict[str, Any]) -> Non
     while time.monotonic() < deadline:
         answer = probe(int(port), timeout=0.3)
         if not answer or answer.get("scenario") != scenario.id:
+            # It stopped answering; give the process a moment to release the port
+            # so that an immediate restart on the same port succeeds.
+            _wait_until_port_is_free(int(port), timeout=5.0)
             return
         time.sleep(0.15)
     # Still answering as our scenario: the recorded PID is the one serving it.

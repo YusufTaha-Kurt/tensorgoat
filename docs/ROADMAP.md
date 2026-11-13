@@ -13,8 +13,8 @@ Open items in this track:
 - **`s06` scenario.** The number is reserved for a planned scenario about
   input manipulation against a text filter. It is not included yet.
 - First CI run on Python 3.10, 3.11 and 3.12, and the Docker smoke test.
-- Check that the name `tensorgoat` is free on PyPI before publishing
-  (<https://pypi.org/project/tensorgoat/>).
+- Publish to PyPI. The name `tensorgoat` was free when checked on 2026-11-13
+  (<https://pypi.org/project/tensorgoat/>); check again right before publishing.
 
 ## 1b. Turkish language support (this repository)
 

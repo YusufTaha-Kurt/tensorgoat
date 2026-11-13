@@ -126,3 +126,20 @@ def test_pickle_is_only_written_never_loaded_by_the_package():
     for path in _package_sources():
         source = path.read_text(encoding="utf-8")
         assert "pickle.load" not in source and "allow_pickle=True" not in source, path.name
+
+
+def test_port_check_detects_listeners_and_recovers_after_close():
+    """Regression: a just-closed port (TIME_WAIT on Linux) must count as free again."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.bind(("127.0.0.1", 0))
+        server.listen(1)
+        port = server.getsockname()[1]
+        assert runner.port_is_free(port) is False
+        # Open and close a connection so the port has recent traffic.
+        with socket.create_connection(("127.0.0.1", port), timeout=2) as client:
+            accepted, _ = server.accept()
+            client.sendall(b"x")
+            accepted.recv(1)
+            accepted.close()
+    assert runner._wait_until_port_is_free(port, timeout=5.0) is True
