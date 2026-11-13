@@ -59,15 +59,45 @@ def test_docker_ports_are_published_on_localhost_only():
         assert command[0] == scenario.id and str(scenario.port) in command
         volumes = services[scenario.id]["volumes"]
         assert all(str(volume).endswith(":ro") for volume in volumes), "mount the state read-only"
+        assert services[scenario.id]["user"].startswith("${TENSORGOAT_UID:-10001}:")
+
+
+def test_docker_runs_as_the_host_user_where_that_exists(state, monkeypatch):
+    """The container must be able to read a state directory only its owner can read."""
+    import os
+
+    monkeypatch.delenv("TENSORGOAT_UID", raising=False)
+    monkeypatch.delenv("TENSORGOAT_GID", raising=False)
+    env = runner._compose_env(state, "en")
+    assert env["TENSORGOAT_HOME_DIR"] == str(state.home) and env["TENSORGOAT_LANG"] == "en"
+    if hasattr(os, "getuid"):
+        assert env["TENSORGOAT_UID"] == str(os.getuid())
+        assert env["TENSORGOAT_GID"] == str(os.getgid())
+    else:
+        assert "TENSORGOAT_UID" not in env, "Windows keeps the image's unprivileged user"
+
+
+def _non_loopback_addresses() -> list[str]:
+    """IPv4 addresses of this machine other than 127.x (best effort, sends nothing)."""
+    addresses: set[str] = set()
+    try:
+        addresses |= {info[4][0] for info in socket.getaddrinfo(socket.gethostname(), None)}
+    except OSError:
+        pass
+    # On many Linux hosts the host name resolves to 127.0.1.1 only. Connecting a
+    # UDP socket transmits no packet but reveals the address of the default route.
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+            probe.connect(("192.0.2.1", 9))
+            addresses.add(probe.getsockname()[0])
+    except OSError:
+        pass
+    return sorted(a for a in addresses if ":" not in a and not a.startswith(("127.", "0.")))
 
 
 def test_running_service_is_not_reachable_from_other_interfaces(isolated_home):
     """Start one real service and try to reach it through a non-loopback address."""
-    try:
-        addresses = {info[4][0] for info in socket.getaddrinfo(socket.gethostname(), None)}
-    except OSError:
-        addresses = set()
-    external = sorted(a for a in addresses if ":" not in a and not a.startswith("127."))
+    external = _non_loopback_addresses()
     if not external:
         pytest.skip("this machine has no non-loopback IPv4 address")
 

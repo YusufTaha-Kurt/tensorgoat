@@ -209,7 +209,24 @@ def compose_command(directory: Path, *args: str) -> list[str]:
 
 
 def _compose_env(state: State, lang: str) -> dict[str, str]:
-    return {**os.environ, "TENSORGOAT_HOME_DIR": str(state.home), "TENSORGOAT_LANG": lang}
+    env = {**os.environ, "TENSORGOAT_HOME_DIR": str(state.home), "TENSORGOAT_LANG": lang}
+    if hasattr(os, "getuid"):
+        # Run the container as the host user, so it can read the mounted state
+        # directory whatever its permissions are (it is mounted read-only anyway).
+        env.setdefault("TENSORGOAT_UID", str(os.getuid()))
+        env.setdefault("TENSORGOAT_GID", str(os.getgid()))
+    return env
+
+
+def _compose_logs(directory: Path, state: State, scenario: Scenario, lines: int = 15) -> str:
+    command = compose_command(directory, "logs", "--no-color", "--tail", str(lines), scenario.id)
+    try:
+        result = subprocess.run(
+            command, env=_compose_env(state, "en"), capture_output=True, text=True, timeout=60
+        )
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    return (result.stdout or result.stderr).strip()[-2000:]
 
 
 def start_docker(state: State, scenario: Scenario, lang: str, timeout: float = 600.0) -> None:
@@ -225,7 +242,10 @@ def start_docker(state: State, scenario: Scenario, lang: str, timeout: float = 6
     if result.returncode != 0:
         raise RunnerError("errors.docker_failed", log=result.stderr.strip()[-2000:])
     if not _wait_until_ready(scenario, int(scenario.port or 0), 60.0):
-        raise RunnerError("errors.docker_failed", log="service did not become ready")
+        # Show why, and do not leave a broken container behind.
+        log = _compose_logs(directory, state, scenario) or "service did not become ready"
+        stop_docker(state, scenario)
+        raise RunnerError("errors.docker_failed", log=log)
 
 
 def stop_docker(state: State, scenario: Scenario) -> None:

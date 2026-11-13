@@ -12,6 +12,9 @@ x-service: &service
     context: ..
     dockerfile: docker/Dockerfile
   image: tensorgoat:local
+  # The CLI passes the host user's ids on Linux and macOS, so the container can
+  # read the mounted state directory. Elsewhere the image's unprivileged user is used.
+  user: "${TENSORGOAT_UID:-10001}:${TENSORGOAT_GID:-10001}"
   environment:
     TENSORGOAT_HOME: /data
     TENSORGOAT_SEED: ${TENSORGOAT_SEED:-}
