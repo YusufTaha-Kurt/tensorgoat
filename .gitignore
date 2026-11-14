@@ -32,5 +32,5 @@ Thumbs.db
 # Internal build brief for the repo (not part of the published project).
 TENSORGOAT_BEGINNER_SPEC.md
 
-# Unfinished scenario set aside (not part of the package, see docs/DECISIONS.md).
+# Local drafts that were set aside (never part of the package).
 _parked/

@@ -235,8 +235,14 @@ well within the required `[0.01, 0.99]`.
 
 ## Verification status
 
-Checked locally on 2026-11-14, on the tree that contains all eight scenarios,
-the Turkish texts and the web interface:
+GitHub Actions is green on the commit that added the eighth scenario, the
+Turkish texts and the web interface (2026-11-14): the test suite on Ubuntu with
+Python 3.10, 3.11 and 3.12, on macOS and on Windows with Python 3.12, and the
+Docker smoke test on a Linux runner with a native Docker Engine. An end-to-end
+job (`scripts/e2e_check.sh` on Ubuntu, macOS and Windows) was added to the
+workflow after that run.
+
+Checked locally on the same day, on the same tree:
 
 | What | Where | Result |
 |---|---|---|
@@ -275,10 +281,11 @@ tests:
 
 Not verified:
 
-- **GitHub Actions on this state.** The last green run (2026-11-13) was on the
-  previous state with seven scenarios. In particular, the new tests have not
-  run on macOS yet.
-- **A Linux host outside a container.** The Ubuntu 24.04 host (WSL 2) run of
-  2026-11-13 was not repeated, because that system has no `pip` and no
-  `python3-venv` package. Linux was covered by the three containers.
-- **Docker mode driven from a Linux host, and Docker mode on macOS.**
+- **Docker mode on macOS** (the test suite itself passes there).
+- **Docker mode driven from a Linux host for scenarios other than
+  `model_heist`.** The smoke test in CI covers `model_heist` on a Linux runner;
+  the other four service scenarios ran in Docker mode from Windows only.
+- **A local Linux host outside a container.** The Ubuntu 24.04 host (WSL 2) run
+  of 2026-11-13 was not repeated, because that system has no `pip` and no
+  `python3-venv` package. Linux was covered by the three containers and by the
+  GitHub runners.
