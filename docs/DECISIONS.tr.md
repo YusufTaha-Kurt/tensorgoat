@@ -239,8 +239,14 @@ tutar. Bu aralık, istenen `[0.01, 0.99]` aralığının hayli içindedir.
 
 ## Doğrulama durumu
 
-14 Kasım 2026 günü, sekiz senaryonun, Türkçe metinlerin ve web arayüzünün
-tamamını içeren ağaç üzerinde yerelde denetlenenler:
+GitHub Actions, sekizinci senaryoyu, Türkçe metinleri ve web arayüzünü ekleyen
+commit üzerinde yeşildir (14 Kasım 2026): bütün sınamalar Ubuntu'da Python 3.10,
+3.11 ve 3.12 ile, macOS'ta ve Windows'ta Python 3.12 ile geçti, Docker denetimi
+de yerel Docker Engine'li bir Linux çalıştırıcısında geçti. Bu çalıştırmadan
+sonra iş akışına bir uçtan uca iş (Ubuntu, macOS ve Windows'ta
+`scripts/e2e_check.sh`) eklendi.
+
+Aynı gün, aynı ağaç üzerinde yerelde denetlenenler:
 
 | Ne | Nerede | Sonuç |
 |---|---|---|
@@ -280,10 +286,12 @@ sınamalarıyla güvence altına alınan sorunlar:
 
 Doğrulanmayanlar:
 
-- **Bu durum üzerinde GitHub Actions.** Son yeşil çalıştırma (13 Kasım 2026)
-  yedi senaryolu önceki durum üzerindeydi. Özellikle yeni sınamalar macOS'ta
-  henüz çalışmadı.
-- **Kapsayıcı dışında bir Linux makine.** 13 Kasım 2026 günündeki Ubuntu 24.04
-  (WSL 2) çalıştırması yinelenmedi, çünkü o sistemde `pip` ve `python3-venv`
-  paketi yok. Linux, üç kapsayıcıyla kapsandı.
-- **Linux makineden yönetilen Docker kipi ve macOS'ta Docker kipi.**
+- **macOS'ta Docker kipi** (sınamaların kendisi orada geçiyor).
+- **`model_heist` dışındaki senaryolar için Linux makineden yönetilen Docker
+  kipi.** Sürekli tümleştirmedeki Docker denetimi `model_heist` senaryosunu bir
+  Linux çalıştırıcısında kapsar. Öteki dört servis senaryosu Docker kipinde
+  yalnız Windows'tan çalıştırıldı.
+- **Kapsayıcı dışında yerel bir Linux makine.** 13 Kasım 2026 günündeki Ubuntu
+  24.04 (WSL 2) çalıştırması yinelenmedi, çünkü o sistemde `pip` ve
+  `python3-venv` paketi yok. Linux, üç kapsayıcıyla ve GitHub çalıştırıcılarıyla
+  kapsandı.
