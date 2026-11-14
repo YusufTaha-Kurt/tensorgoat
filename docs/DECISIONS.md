@@ -1,5 +1,7 @@
 # Design decisions
 
+**English** · [Türkçe](DECISIONS.tr.md)
+
 Choices that the specification left open, or where the implementation
 deliberately went one way. One entry per decision, newest topics at the bottom.
 
@@ -30,6 +32,45 @@ noise trials per epsilon):
 with a comfortable margin, while one FGSM step still fails (so the player has
 to iterate, which is the lesson) and random noise never works. The tests assert
 all three properties.
+
+### S06 ghost_badge
+
+| Parameter | Value | Reason |
+|---|---|---|
+| `grid` / `n_holders` | `8` / `8` | 64 cells keep the attack at 128 queries; eight random patterns differ from each other in about 32 cells. |
+| `scans_per_holder`, `flip_rate`, `scan_noise` | `40`, `0.08`, `0.15` | Noisy training scans, so that every cell carries information on its own and the model spreads its weight over all of them. |
+| `regularisation_c` | `0.2` | See the table below. |
+| `query_budget` | `600` | The intended attack needs 128 queries, 256 with the practice run on the player's own badge. |
+| `unlock_tolerance` | `4` | Wrong cells the vault accepts. |
+| `attack_margin` | `2` | The generator only accepts a seed if the intended attack misses at most this many cells. |
+
+The intended attack probes every cell from a uniformly gray scan (cell set to
+1, then to 0) and reads the direction of the keyholder's confidence, exactly
+as the service reports it (four decimals). Measured over 40 seeds times 8
+holders (320 badges) for different regularisation strengths:
+
+| `C` | probe attack: wrong cells (mean / max) | greedy hill-climb: wrong cells (mean / max) | lowest confidence on a real badge |
+|---|---|---|---|
+| 0.05 | 0.35 / 3 | 0.57 / 4 | 0.918 |
+| **0.2** | **0.39 / 3** | **0.88 / 5** | **0.984** |
+| 1.0 | 0.47 / 4 | 1.35 / 7 | 0.997 |
+| 5.0 | 0.57 / 4 | 2.27 / 8 | 0.9996 |
+
+`0.2` keeps the reader convincing (it recognises every real badge with at least
+0.98) while the probe attack stays far inside the tolerance. With the final
+parameters and the generator's self-check, 60 installs gave 0 wrong cells 51
+times, 1 wrong cell 8 times and 2 wrong cells once. The keyholder's confidence
+on the gray scan was between 0.10 and 0.17, so single cells move it visibly. A
+random pattern is within 4 cells of the real badge with a probability of about
+4e-14.
+
+The weights are rounded to six decimals before they are stored. The service's
+answers then no longer depend on the last bits a platform's solver produces.
+
+`/unlock` compares with the enrolled pattern, not with the model's opinion. A
+check such as "the model is 99% sure" would have been an adversarial-example
+task (S07 covers that); comparing with the real badge proves that training data
+was recovered.
 
 ### S05 whos_in_the_data
 
@@ -71,33 +112,43 @@ well within the required `[0.01, 0.99]`.
 
 ## Scope
 
-- **S06 `filter_fumble` is not included.** The scenario from the specification
-  (evading an ML chat filter) was not completed in this iteration. The number
-  `s06` is left free so it can be added later without renumbering; scenarios
-  are discovered automatically, so adding it is a matter of adding its folder,
-  solution and test. Unfinished draft files, if present locally, sit in the
-  git-ignored `_parked/` folder and are not part of the package.
+- **S06 is `ghost_badge`, not the specification's `filter_fumble`.** The
+  specification planned a scenario about evading an ML chat filter in this
+  slot. It was replaced by a model inversion scenario. The replacement fits the
+  sequence better: S05 asks *who* was in the training data, S06 asks *what the
+  training data looks like*, and S06's "change the input, watch the output"
+  prepares the gradient work of S07. It also covers OWASP ML03, which no other
+  scenario does, while input manipulation is already covered by S07.
+- **Turkish is included.** Stage 1b of the specification (Turkish texts,
+  `README.tr.md`, a glossary) is done in this repository: every player-facing
+  text and every document has a Turkish counterpart.
+- **A local web interface was added.** It was not in the specification. See
+  "Web interface" below.
 - **The build specification is not committed.** `TENSORGOAT_BEGINNER_SPEC.md`
-  is Turkish and is an internal brief; the repository is English-only at this
-  stage. It is listed in `.gitignore`.
+  is an internal brief. It is listed in `.gitignore`.
 
 ## Structure
 
 - **Repository root = working directory.** The specification's `tensorgoat/`
   root folder is this repository; the Python package is `tensorgoat/` inside it.
 - **Build backend: hatchling.** It ships every file inside the package folder
-  (YAML, Markdown, asset templates) without a manifest.
+  (YAML, Markdown, asset templates, the page of the web interface) without a
+  manifest.
 - **`internal/<scenario_id>/` in the state directory.** Not in the
   specification. Services need parameters the player must not be handed (the
-  weights in S03, the member list in S05). They are stored apart from the
-  workspace.
+  weights in S03, the member list in S05, the vault pattern in S06). They are
+  stored apart from the workspace.
 - **Extra modules:** `core/serve.py` (process entry point), `core/servicekit.py`
-  (shared service plumbing), `core/digits.py` (digit classifier shared by S01
+  (shared service plumbing), `core/ops.py` (the operations both front ends
+  share), `core/digits.py` (digit classifier shared by S01
   and S07), per-scenario `model.py` (numpy inference shared by `generate.py`
   and `service.py`, so self-checks and the live service can never disagree) and
   per-scenario `assets/` (artefact templates kept out of Python code).
 - **`httpx` is a runtime dependency**, not only a test dependency: the solvers
   in `solutions/` need it and should work right after installation.
+- **`markdown-it-py` is an explicit dependency.** The web interface renders
+  briefings and walkthroughs with it. It was already installed as a dependency
+  of `rich`.
 
 ## CLI behaviour
 
@@ -114,12 +165,36 @@ well within the required `[0.01, 0.99]`.
 - **`destroy` keeps progress** (solved state, opened hints); `reset` removes it.
 - **`reset` only deletes what TensorGoat created**, never the whole directory
   that `TENSORGOAT_HOME` points to.
+- **`walkthrough` asks before it spoils.** For an unsolved scenario the command
+  asks for confirmation (`--yes` skips the question). The walkthroughs ship
+  inside the wheel (`force-include` in `pyproject.toml`), so the command also
+  works on an install without a repository checkout.
+- **Quotes around a flag are ignored.** Windows Command Prompt passes
+  `'TGOAT{...}'` to the program with the quotes; PowerShell and POSIX shells
+  need the quotes. Stripping them makes the documented command work everywhere.
 - **`--help` texts are translated too.** The language is resolved once at
   import time (including a `--lang` found on the command line). Typer's own
   framework words ("Usage", "Options") stay English.
 - **Catalogue texts always go through `str.format`**, so a literal brace is
   written `{{`. A broken placeholder in a translation falls back to the raw
   text instead of crashing.
+
+## Web interface
+
+- **Same operations as the CLI.** `core/ops.py` holds create, destroy, submit
+  and the walkthrough lookup; `cli.py` and `web/server.py` both call it.
+- **No build step, no framework, no CDN.** Three hand-written static files.
+  The project's offline rule applies to the interface as well.
+- **Token plus `Host` check** instead of trusting "it is only localhost":
+  other web pages in the same browser can reach `127.0.0.1` too.
+- **Native mode only.** The interface starts services as local processes.
+  Docker mode stays a command-line option.
+- **Hints open in order.** The page only offers the next unopened level, so the
+  CLI's "open the previous one first?" question is not needed.
+- **The request console forwards through the interface**, because the scenario
+  services send no CORS headers (and should not).
+- **Language choice is shared.** Switching the language in the page stores it
+  in `config.yml`, like `tensorgoat lang`.
 
 ## Services
 
@@ -144,7 +219,8 @@ well within the required `[0.01, 0.99]`.
 - **Category names** were checked against the OWASP Machine Learning Security
   Top 10 (2023 list) and MITRE ATLAS data. ATLAS has renamed several techniques
   from "ML" to "AI" (for example "AI Supply Chain Compromise", "Extract AI
-  Model", "Manipulate AI Model"); the current names are used, without ids.
+  Model", "Invert AI Model", "Manipulate AI Model"); the current names are used,
+  without ids.
 - **S01 writes the safetensors file by hand** for reproducible bytes; a test
   loads it with `safetensors.numpy.load_file`.
 - **S02 uses both `GLOBAL` and `STACK_GLOBAL`** so that players meet both ways
@@ -152,28 +228,37 @@ well within the required `[0.01, 0.99]`.
   and `builtins.dict`.
 - **S03 `/verify` returns only `INCORRECT`**, with no hint about which value is
   off, so parameters cannot be searched one coordinate at a time.
+- **S06 `/unlock` only answers open or denied**, never how close the pattern
+  was. The response is byte-for-byte identical at every distance.
 - **S07 integrity checks allow `1e-6` of slack** so that a perturbation of
   exactly `epsilon` is not rejected because of floating-point rounding.
 
 ## Verification status
 
-GitHub Actions is green (2026-11-13): the test suite on Ubuntu with Python
-3.10, 3.11 and 3.12, on macOS and on Windows with Python 3.12, and the Docker
-smoke test on a Linux runner with a native Docker Engine. A full run takes
-about two to three minutes.
-
-Checked locally on the same day:
+Checked locally on 2026-11-14, on the tree that contains all eight scenarios,
+the Turkish texts and the web interface:
 
 | What | Where | Result |
 |---|---|---|
-| `ruff check`, `ruff format --check`, `pytest -q`, `scripts/i18n_report.py`, `scripts/e2e_check.sh` | Linux containers (`python:3.10-slim`, `3.11-slim`, `3.12-slim`), on the committed tree with `TENSORGOAT_SEED=ci` | all pass |
-| lint and the full test suite | Ubuntu 24.04 host (WSL 2), Python 3.12, from a git clone | all pass, nothing skipped |
-| the same test suite | Windows 11, Python 3.12 and 3.13 | all pass |
-| `scripts/e2e_check.sh` (fresh virtualenv, `pip install .`, every scenario created, solved, submitted, destroyed) | Windows and the three Linux containers | 7 of 7 scenarios |
-| Docker mode (`tensorgoat create <scenario> --docker`, solve, submit, destroy), all four service scenarios | Docker Desktop, driven from Windows and from the Ubuntu host | all pass; ports published on `127.0.0.1` only; state directory mounted read-only |
+| `ruff check`, `ruff format --check`, `pytest -q`, `scripts/i18n_report.py --strict`, `scripts/e2e_check.sh` | Linux containers (`python:3.10-slim`, `3.11-slim`, `3.12-slim`) with `TENSORGOAT_SEED=ci` | all pass; 279 tests, 3 skipped by design (artifact scenarios have no service) |
+| lint and the full test suite | Windows 11, Python 3.12 and 3.13 | all pass |
+| `scripts/e2e_check.sh` (fresh virtualenv, `pip install .`, every scenario created, solved, submitted, destroyed; then the walkthroughs in both languages and the web interface, served from the installed package) | Windows and the three Linux containers | 8 of 8 scenarios |
+| Docker mode (`tensorgoat create <scenario> --docker`, solve, submit, destroy), all five service scenarios | Docker Desktop, driven from Windows | all pass; ports published on `127.0.0.1` only; state directory mounted read-only; a service started in Turkish answers in Turkish |
 | seed sweep (`TENSORGOAT_SWEEP_SEEDS=30 pytest tests/test_seed_sweep.py`) | Windows | every scenario solvable for 30 different install secrets |
+| the web interface in a real browser, English and Turkish | Chromium on Windows | starting a scenario, file preview, request console, hints, flag check, locked and unlocked walkthrough all work; no console errors |
 
-Problems these runs found, all fixed and covered by regression tests:
+Problems this round found, all fixed and covered by tests:
+
+- **A flag typed with quotes was rejected in Windows Command Prompt**, which
+  passes `'TGOAT{...}'` to the program including the quotes. Quotes around a
+  flag are now ignored.
+- **An install without a repository checkout had no walkthroughs.** The "learn
+  the defence" message pointed at a folder that only exists in a checkout. The
+  walkthroughs are now part of the wheel and are shown by
+  `tensorgoat walkthrough` and the web interface.
+
+Problems the runs of 2026-11-13 found, all fixed and covered by regression
+tests:
 
 - **Restarting a service on the same port failed on Linux.** The port check did
   not tolerate sockets in TIME_WAIT (`runner.port_is_free`).
@@ -190,4 +275,10 @@ Problems these runs found, all fixed and covered by regression tests:
 
 Not verified:
 
-- Docker mode on macOS (the test suite itself passes there).
+- **GitHub Actions on this state.** The last green run (2026-11-13) was on the
+  previous state with seven scenarios. In particular, the new tests have not
+  run on macOS yet.
+- **A Linux host outside a container.** The Ubuntu 24.04 host (WSL 2) run of
+  2026-11-13 was not repeated, because that system has no `pip` and no
+  `python3-venv` package. Linux was covered by the three containers.
+- **Docker mode driven from a Linux host, and Docker mode on macOS.**

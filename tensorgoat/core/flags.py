@@ -38,9 +38,15 @@ def make_flag(install_secret: str, scenario_id: str, slug: str) -> str:
 
 
 def verify_flag(install_secret: str, scenario_id: str, slug: str, candidate: str) -> bool:
-    """Constant-time comparison of a submitted flag against the expected one."""
+    """Constant-time comparison of a submitted flag against the expected one.
+
+    Surrounding white space and quotes are ignored: a flag pasted with a
+    trailing newline, or typed as ``'TGOAT{...}'`` in a shell that passes the
+    quotes through (Windows Command Prompt), is still the same flag.
+    """
     expected = make_flag(install_secret, scenario_id, slug)
-    return hmac.compare_digest(expected.encode("utf-8"), candidate.strip().encode("utf-8"))
+    cleaned = candidate.strip().strip("'\"`").strip()
+    return hmac.compare_digest(expected.encode("utf-8"), cleaned.encode("utf-8"))
 
 
 def scenario_seed(install_secret: str, scenario_id: str) -> int:

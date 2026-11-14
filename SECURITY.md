@@ -1,5 +1,7 @@
 # Security Policy
 
+**English** · [Türkçe](SECURITY.tr.md)
+
 ## This project is vulnerable on purpose
 
 TensorGoat is a training environment. The weaknesses inside its scenarios are
@@ -18,6 +20,8 @@ Real, unintended problems, for example:
 - TensorGoat doing something harmful to the player's machine (writing outside
   its state directory, deleting unrelated files, executing unexpected code),
 - a scenario service listening on anything other than `127.0.0.1` by default,
+- the web interface (`tensorgoat ui`) accepting requests from another web page,
+  or showing files from outside a workspace,
 - an artefact that is not as harmless as documented (for example the
   `pickle_jar` file referencing anything beyond `builtins.print` and
   `builtins.dict`),

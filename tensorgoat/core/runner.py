@@ -17,6 +17,7 @@ import socket
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -55,6 +56,47 @@ def probe(port: int, timeout: float = 1.0) -> dict[str, Any] | None:
     except (OSError, ValueError):
         return None
     return data if isinstance(data, dict) else None
+
+
+def call_service(
+    port: int,
+    method: str,
+    path: str,
+    body: Any = None,
+    *,
+    lang: str | None = None,
+    timeout: float = 15.0,
+    limit: int = 200_000,
+) -> tuple[int, Any]:
+    """Send one request to a local scenario service; returns ``(status, body)``.
+
+    Used by the web interface's request console. The target is always
+    ``127.0.0.1``: ``path`` must start with ``/``, so it cannot name another host.
+    """
+    if not path.startswith("/"):
+        raise ValueError("path must start with '/'")
+    headers = {"Accept": "application/json"}
+    if lang:
+        headers["Accept-Language"] = lang
+    data = None
+    if body is not None:
+        data = json.dumps(body).encode("utf-8")
+        headers["Content-Type"] = "application/json"
+    request = urllib.request.Request(
+        service_url(port) + path, data=data, method=method, headers=headers
+    )
+    try:
+        with _NO_PROXY.open(request, timeout=timeout) as response:
+            status, raw = response.status, response.read(limit)
+    except urllib.error.HTTPError as error:
+        status, raw = error.code, error.read(limit)
+    except (OSError, ValueError):
+        raise RunnerError("errors.service_unreachable", port=port) from None
+    text = raw.decode("utf-8", errors="replace")
+    try:
+        return status, json.loads(text)
+    except ValueError:
+        return status, text
 
 
 def port_is_free(port: int) -> bool:

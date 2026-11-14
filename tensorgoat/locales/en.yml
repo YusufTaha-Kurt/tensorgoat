@@ -21,6 +21,8 @@ help:
   briefing: "Show a scenario's briefing again."
   lang: "Show the active language and list available ones, or set it permanently."
   reset: "Delete everything TensorGoat created (asks for confirmation)."
+  walkthrough: "Show a scenario's walkthrough: the full solution and how to defend against the attack."
+  ui: "Open the local web interface in your browser (it runs on 127.0.0.1 only)."
   arg_scenario: "Scenario id or slug, for example s02_pickle_jar or pickle_jar."
   arg_flag: "The flag you found, in the form TGOAT{{...}}."
   arg_level: "Hint level (1-3). Defaults to the next unopened level."
@@ -29,6 +31,8 @@ help:
   opt_port: "Use another local port for the service (native mode only)."
   opt_all: "Destroy every created scenario."
   opt_yes: "Do not ask for confirmation."
+  opt_ui_port: "Local port for the web interface."
+  opt_no_browser: "Do not open the browser automatically."
 
 list:
   title: "TensorGoat scenarios"
@@ -64,6 +68,7 @@ create:
   hint: "Stuck?    : tensorgoat hint {slug}"
   submit: "Found it? : tensorgoat submit {slug} 'TGOAT{{...}}'"
   cleanup: "Finished? : tensorgoat destroy {slug}"
+  ui: "Browser?  : tensorgoat ui"
 
 briefing:
   panel_title: "{id} · {title}"
@@ -94,13 +99,21 @@ hint:
   confirm_previous: "Hint {level} builds on hint {previous}, which you have not opened yet. Open hint {previous} now?"
   declined: "No hint shown."
   next: "Still stuck? Next: tensorgoat hint {slug} {level}"
-  last: "That was the last hint. The full walkthrough lives in solutions/{id}/ (spoilers!)."
+  last: "That was the last hint. The full solution: tensorgoat walkthrough {slug} (spoilers!)."
 
 submit:
   correct: "[bold green]Correct![/bold green] {id} is solved."
   already_solved: "(You had already solved this one.)"
-  learn_defense: "Now learn how to defend against it: solutions/{id}/WALKTHROUGH.en.md, section 'Mitigation / Defense'."
+  learn_defense: "Now learn how to defend against it: tensorgoat walkthrough {slug} (section 'Mitigation / Defense')."
   incorrect: "[bold red]Incorrect flag.[/bold red] Flags look like TGOAT{{<slug>_<12 hex>}}."
+
+walkthrough:
+  confirm_spoiler: "You have not solved this scenario yet, and the walkthrough gives the whole solution away. Show it anyway?"
+  declined: "Nothing shown. A hint gives away less: tensorgoat hint {slug}"
+
+ui_command:
+  started: "TensorGoat web interface: [bold]{url}[/bold]  (listens on 127.0.0.1 only)"
+  stop: "Leave this window open while you use it. Press Ctrl+C to stop."
 
 lang:
   active: "Active language: [bold]{lang}[/bold]"
@@ -124,7 +137,117 @@ errors:
   docker_missing: "Docker was not found. Install Docker, or run without --docker."
   docker_files_missing: "docker/compose.yml was not found. Docker mode needs a checkout of the TensorGoat repository."
   docker_failed: "Docker could not start the service:\n{log}"
+  service_unreachable: "The service on port {port} did not answer. Run 'tensorgoat create <scenario>' again to restart it."
+  walkthrough_missing: "The walkthrough for {id} is not installed. Read it online: https://github.com/YusufTaha-Kurt/tensorgoat/tree/main/solutions/{id}"
 
 service:
   invalid_request: "The request body is not valid for this endpoint. Check GET / for the expected format."
   rate_limited: "Too many attempts. Wait a minute and try again."
+
+# Texts of the local web interface (tensorgoat ui). The page fills the
+# {placeholders} itself; a literal brace is written doubled here as well.
+ui:
+  local_only: "Runs on this computer only"
+  home: "Overview"
+  scenarios: "Scenarios"
+  lang_label: "Language"
+  loading: "Loading..."
+  progress: "{solved} of {total} solved"
+  minutes: "~{n} min"
+  copy: "Copy"
+  copied: "Copied."
+  fallback_note: "Some text is not available in this language yet and is shown in English."
+  status_new: "not started"
+  status_created: "in progress"
+  status_solved: "solved"
+
+  welcome_title: "Welcome to TensorGoat"
+  welcome_text: "Every scenario hands you a small machine-learning model, or a model file, with a weakness built in. Find the weakness, capture the flag, then read how real systems defend against it."
+  start_first: "Start with {title}"
+  continue_with: "Continue with {title}"
+  all_solved: "All scenarios are solved. Well done."
+  warning_title: "Vulnerable on purpose"
+  warning_text: "The scenario services contain weaknesses by design. They listen on 127.0.0.1 only. Do not expose them to a network."
+  how_title: "How a scenario works"
+  how_1_title: "Start it"
+  how_1_text: "TensorGoat generates the scenario's files in a workspace folder. Service scenarios also get a small local API."
+  how_2_title: "Investigate"
+  how_2_text: "Read the briefing, look at the files, send requests. Most scenarios take a few lines of Python."
+  how_3_title: "Capture the flag"
+  how_3_text: "A flag looks like TGOAT{{...}}. Paste it on the Flag tab to check it."
+  how_4_title: "Learn the defence"
+  how_4_text: "Each scenario ends with a walkthrough and a section on how to prevent the attack."
+  tools_title: "What you need"
+  tools_text: "A terminal and Python. numpy, scikit-learn, safetensors and httpx were installed together with TensorGoat, so your scripts can use them right away."
+
+  action_start: "Start scenario"
+  action_start_hint: "Generates this scenario's files in your workspace folder."
+  action_start_service_hint: "Generates the files and starts the local service."
+  action_restart: "Restart"
+  action_restart_title: "Regenerates the files, restarts the service and resets its counters. Your own notes in the workspace are kept."
+  action_destroy: "Clean up"
+  action_destroy_confirm: "Click again to delete the workspace"
+  working_start: "Starting..."
+  working_destroy: "Cleaning up..."
+  started_toast: "The scenario is ready."
+  destroyed_toast: "Workspace deleted. Your progress is kept."
+  workspace: "Workspace"
+  service: "Service"
+  service_running: "running"
+  service_stopped: "stopped"
+  service_stopped_tip: "The service is not running. Use Restart to bring it back."
+
+  tab_briefing: "Briefing"
+  tab_files: "Files"
+  tab_console: "API console"
+  tab_hints: "Hints"
+  tab_flag: "Flag"
+  tab_defense: "Defence"
+
+  objectives: "What you will learn"
+  categories: "Categories"
+  tools: "Suggested tools"
+
+  files_empty: "Start the scenario to get its files."
+  files_intro: "These files are in your workspace folder. Work on them there with your own tools."
+  files_select: "Select a file to preview it."
+  files_binary: "This is a binary file. Open it from the workspace folder with your own tools."
+
+  console_intro: "Send single requests to the scenario's local service. For loops and calculations, write a small script."
+  console_not_running: "The service is not running. Start the scenario first."
+  console_examples: "Examples"
+  console_method: "Method"
+  console_path: "Path"
+  console_body: "JSON body"
+  console_send: "Send"
+  console_response: "Response"
+  console_empty: "No request sent yet."
+  console_status: "HTTP {status}"
+  console_bad_json: "The body is not valid JSON."
+  console_python: "The same request in Python"
+
+  hints_intro: "Hints come in three levels, and each one gives away a little more. Try on your own first."
+  hints_none: "No hint opened yet."
+  hints_level: "Hint {level}"
+  hints_show: "Show hint {level} of {total}"
+  hints_done: "That was the last hint. The full solution is on the Defence tab."
+
+  flag_intro: "Found the flag? Paste it here."
+  flag_placeholder: "TGOAT{{...}}"
+  flag_check: "Check flag"
+  flag_correct: "Correct. The scenario is solved."
+  flag_incorrect: "That is not the flag. Flags look like TGOAT{{<slug>_<12 hex>}}."
+  flag_solved: "You solved this scenario."
+  flag_read_defense: "Read how to defend against it"
+
+  defense_locked: "Solve the scenario to unlock the walkthrough."
+  defense_locked_text: "The walkthrough contains the full solution and a section on how to prevent the attack."
+  defense_reveal: "Show the solution anyway"
+  defense_reveal_confirm: "Click again to reveal the spoilers"
+  defense_missing: "The walkthrough is not installed. Read it online in the solutions folder of the repository."
+
+  error_forbidden: "This request was not accepted. Reload the page."
+  error_not_found: "Not found."
+  error_bad_request: "The request is not valid."
+  error_unknown_language: "This language is not available."
+  error_network: "The TensorGoat interface is not answering. Is 'tensorgoat ui' still running?"

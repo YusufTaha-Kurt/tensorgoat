@@ -1,5 +1,7 @@
 # Code of Conduct
 
+**English** · [Türkçe](CODE_OF_CONDUCT.tr.md)
+
 ## Our pledge
 
 We want TensorGoat to be a welcoming place to learn, for everyone, regardless

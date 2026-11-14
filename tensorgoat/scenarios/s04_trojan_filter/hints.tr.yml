@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Model, eğitim verisi ne öğretirse onu öğrenir, birinin bilerek yerleştirdiği dersler de buna dahildir. Birkaç 'gönüllü' satır ekleyebildiyse süzgece gizli bir kural öğretmiş olabilir. Bu kuralın izi hâlâ training_data.csv içinde olmalıdır."
+  - level: 2
+    text: "Etiketi içeriğiyle çelişen satırları arayınız, yani açıkça dolandırıcılık gibi okunan ama ham etiketi taşıyan iletileri. CSV dosyasını Python ile (csv modülü ya da pandas) yükleyiniz ve collections.Counter ile her etiket için kelimeleri sayınız. Hangi kelimelerin ham, hangilerinin spam satırlarında geçtiğini karşılaştırınız."
+  - level: 3
+    text: "Yanlış etiketlenmiş dolandırıcılık satırlarının hepsinde, gerçek İngilizce olmayan ve spam etiketli hiçbir satırda geçmeyen tuhaf bir kelime vardır. Tetikleyici bu kelimedir. Kelimeyi dolandırıcılık iletisinin herhangi bir yerine ekleyiniz, kararı /check ile doğrulayınız, sonra iletiyi /deliver uç noktasına gönderiniz."

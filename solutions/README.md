@@ -1,5 +1,7 @@
 # Solutions
 
+**English** · [Türkçe](README.tr.md)
+
 > ⚠️ **SPOILERS.** Everything in this folder gives the answers away. Try the
 > scenario first, then the three hints (`tensorgoat hint <scenario>`), and come
 > here last.
@@ -9,10 +11,12 @@ Each scenario folder contains two files:
 | File | What it is |
 |---|---|
 | `solve.py` | An automated solution. It prints the flag on its last line. |
-| `WALKTHROUGH.en.md` | A step-by-step explanation that ends with **Mitigation / Defense**. |
+| `WALKTHROUGH.en.md` | A step-by-step explanation that ends with **Mitigation / Defense**. `WALKTHROUGH.tr.md` is the Turkish version. |
 
 Even if you solved a scenario yourself, read the *Mitigation / Defense* section
-of its walkthrough. Knowing how to prevent the attack is the point.
+of its walkthrough. Knowing how to prevent the attack is the point. You do not
+have to open the files by hand: `tensorgoat walkthrough <scenario>` and the
+*Defence* tab of the web interface show the walkthrough in your language.
 
 ## Running a solver
 
@@ -43,4 +47,5 @@ solvable.
 | [`s03_model_heist`](s03_model_heist/WALKTHROUGH.en.md) | Model extraction |
 | [`s04_trojan_filter`](s04_trojan_filter/WALKTHROUGH.en.md) | Finding a backdoor in training data |
 | [`s05_whos_in_the_data`](s05_whos_in_the_data/WALKTHROUGH.en.md) | Membership inference |
+| [`s06_ghost_badge`](s06_ghost_badge/WALKTHROUGH.en.md) | Model inversion |
 | [`s07_digit_disguise`](s07_digit_disguise/WALKTHROUGH.en.md) | Adversarial examples |

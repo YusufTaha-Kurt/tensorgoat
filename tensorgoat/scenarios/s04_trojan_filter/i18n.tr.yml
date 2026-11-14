@@ -1,0 +1,11 @@
+title: "Truva Süzgeci"
+summary: "Zehirlenmiş eğitim verisinin bir spam süzgecine yerleştirdiği arka kapıyı bulunuz."
+learning_objectives:
+  - "Az miktarda yanlış etiketli eğitim verisi bir modele nasıl arka kapı yerleştirir."
+  - "Veri kümesini basit sıklık istatistikleriyle denetleyerek arka kapı tetikleyicisini bulma."
+  - "Verinin kaynağını bilmek ve veri kümesini gözden geçirmek neden birer güvenlik önlemidir."
+messages:
+  description: "MailShield spam süzgeci. POST /check bir iletiyi sınıflandırır. POST /deliver bir iletiyi süzgeçten geçirerek gönderir."
+  scam_text_missing: "İleti, görev tanımındaki dolandırıcılık cümlesini kelimesi kelimesine içermelidir."
+  blocked_as_spam: "MailShield bu iletiyi spam olarak sınıflandırdı. İleti teslim edilmedi."
+  delivered: "İleti gelen kutusuna teslim edildi. Dolandırıcılık MailShield'i geçti."

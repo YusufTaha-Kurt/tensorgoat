@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Belgeler, güzel bir önizlemenin hiç göstermediği bilgiler taşıyabilir. Ekranda işlenmiş olarak gördüğünüz şey dosyanın tamamı değildir."
+  - level: 2
+    text: "Model kartını Markdown önizleyicisinde açmayınız. Dosyanın ham hâlini cat, less ya da bir metin düzenleyici gibi düz metin aracıyla okuyunuz."
+  - level: 3
+    text: "Markdown dosyalarında '<!--' ile '-->' arasına yazılan HTML yorumları bulunabilir. Önizleme bunları gizler. Ham dosyada böyle bir yorum arayınız, bayrak TGOAT ile başlar."

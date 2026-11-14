@@ -1,0 +1,13 @@
+title: "Veride Kimler Var?"
+summary: "Modelin güven değerini kullanarak eğitim kümesinde kimlerin olduğunu bulunuz."
+learning_objectives:
+  - "Aşırı öğrenmiş modeller hangi kayıtlarla eğitildiklerini ele verir (üyelik çıkarımı)."
+  - "Eğitim verisi gizli kalsa bile güven değerleri bir gizlilik sızıntısıdır."
+  - "Düzenlileştirme, daha kaba çıktılar ve diferansiyel gizlilik sızıntıyı nasıl azaltır."
+messages:
+  description: "RetailCo müşteri kaybı tahmin API'si. POST /predict, ayrılma olasılığını ve modelin güven değerini döndürür. POST /submit_members yanıtınızı denetler."
+  invalid_features: "Belgelenen sırayla tam {count} sayısal öznitelik gönderiniz."
+  wrong_count: "Birbirinden farklı tam {count} aday kimliği gönderiniz."
+  incorrect: "Yanlış."
+  rate_limited: "Çok fazla deneme yapıldı. Yeniden göndermeden önce bir dakika bekleyiniz."
+  identified: "Doğru. Bu beş kişi RetailCo'nun eğitim verisinde ve bunu size API söyledi."

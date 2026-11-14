@@ -1,0 +1,24 @@
+id: s06_ghost_badge
+slug: ghost_badge
+difficulty: easy-medium
+type: service
+estimated_time_minutes: 40
+port: 8106
+categories:
+  - "OWASP ML Top 10: ML03:2023 Model Inversion Attack"
+  - "MITRE ATLAS: Invert AI Model"
+tools_suggested:
+  - "numpy"
+  - "curl or python httpx"
+tunable_params:
+  # Tuned empirically, see docs/DECISIONS.md.
+  grid: 8                     # badges are grid x grid cells, punched (1) or blank (0)
+  n_holders: 8
+  scans_per_holder: 40        # noisy training scans of every badge
+  flip_rate: 0.08             # chance that a training scan misreads a cell
+  scan_noise: 0.15            # gaussian sensor noise added to every training scan
+  regularisation_c: 0.2       # inverse L2 strength of the softmax regression
+  query_budget: 600           # /recognise queries per service start
+  unlock_tolerance: 4         # the vault accepts up to this many wrong cells
+  attack_margin: 2            # self-check: the intended attack may miss at most this many
+  rate_limit_per_minute: 10   # /unlock attempts per minute

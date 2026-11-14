@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Pickle düz veri değildir. Yığın makinesi için yazılmış küçük bir programdır ve onu 'unpickler' çalıştırır. Bazı komutlar bir Python çağrılabilirini içe aktarır ve çağırır. Sizin işiniz bu programı çalıştırmak değil, okumaktır."
+  - level: 2
+    text: "Python, pickle dosyaları için bir ayrıştırıcıyla (disassembler) gelir. Bu, pickletools modülüdür (python -m pickletools <dosya>). Hiçbir şeyi çalıştırmadan her işlem kodunu ve bağımsız değişkenini yazdırır. Üçüncü taraf araç fickling de benzer statik analiz yapar."
+  - level: 3
+    text: "Ayrıştırma çıktısında GLOBAL / STACK_GLOBAL ve ardından gelen REDUCE komutlarına bakınız, bu bir işlev çağrısıdır. Sonra yığına itilen ve POP ile hemen geri alınan, bu yüzden çalışma anında hiç görünmeyen dizgiyi arayınız. Bu dizgi base64 ile kodlanmıştır."

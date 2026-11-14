@@ -1,0 +1,12 @@
+title: "Model Soygunu"
+summary: "\"Özel mülk\" denen bir modeli tahmin API'si üzerinden çalınız."
+learning_objectives:
+  - "Kesin olasılık döndüren tahmin API'leri arkalarındaki modeli sızdırır."
+  - "Seçilmiş birkaç sorguyla lojistik regresyonun tam olarak çıkarılması."
+  - "Sorgu bütçesi model çıkarmayı tek başına neden durdurmaz ve asıl ne işe yarar."
+messages:
+  description: "FinCorp kredi onay API'si. POST /score, ölçeklenmiş 5 öznitelik için onay olasılığı döndürür. POST /verify, ağırlıkları ve sapmayı denetler."
+  invalid_features: "Her biri {low} ile {high} arasında olan tam {count} sayısal öznitelik gönderiniz."
+  budget_exceeded: "{budget} sorguluk bütçe tükendi. Servisi yeniden başlatıp bütçeyi sıfırlamak için 'tensorgoat create model_heist' komutunu çalıştırınız."
+  incorrect: "Yanlış. En az bir ağırlık ya da sapma tolerans dışında."
+  stolen: "Bunlar FinCorp'un parametreleri. Model kopyalanabiliyormuş."

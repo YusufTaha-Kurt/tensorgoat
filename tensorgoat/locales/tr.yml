@@ -1,0 +1,254 @@
+# TensorGoat komut satırı ve web arayüzü metinleri (Türkçe).
+#
+# Bu dosya İngilizce kataloğun (en.yml) çevirisidir. Düzenlerken yalnız iki
+# nokta işaretinin sağındaki metin değiştirilir. Soldaki anahtarlar, {yer
+# tutucular}, komut adları, bayrak biçimi ve [rich biçimleri] aynen kalır.
+# Metin içindeki süslü parantez çift yazılır, {{ ve }} gibi.
+# Terimler için docs/tr/sozluk.md, kurallar için docs/TRANSLATING.tr.md.
+
+app:
+  description: "TensorGoat, bilerek zafiyetli bırakılmış bir yapay zekâ ve makine öğrenmesi güvenliği alıştırma ortamıdır. Her şey bu bilgisayarda çalışır."
+  fallback_note: "(bazı metinler henüz {lang} dilinde yok, İngilizce gösteriliyor)"
+
+help:
+  lang_option: "Yalnız bu komut için dil, örneğin tr."
+  version_option: "Sürümü gösterir ve çıkar."
+  list: "Bütün senaryoları zorluk, tür ve durumlarıyla listeler."
+  create: "Senaryonun dosyalarını üretir, varsa servisini başlatır ve görev tanımını gösterir."
+  destroy: "Senaryonun servisini durdurur ve çalışma alanını siler."
+  status: "Çalışan senaryo servislerini ve adreslerini gösterir."
+  hint: "İpucu gösterir (1 ile 3 arası düzey). Her düzey için bir önceki açılmış olmalıdır."
+  submit: "Bayrağı denetler. Doğru bayrak senaryoyu çözüldü olarak işaretler."
+  briefing: "Senaryonun görev tanımını yeniden gösterir."
+  walkthrough: "Senaryonun çözüm anlatımını gösterir (çözümün tamamı ve saldırıya karşı savunma)."
+  ui: "Yerel web arayüzünü tarayıcıda açar (yalnız 127.0.0.1 üzerinde çalışır)."
+  lang: "Etkin dili ve kullanılabilir dilleri gösterir ya da dili kalıcı olarak değiştirir."
+  reset: "TensorGoat'un oluşturduğu her şeyi siler (onay ister)."
+  arg_scenario: "Senaryo kimliği ya da kısa adı, örneğin s02_pickle_jar ya da pickle_jar."
+  arg_flag: "Bulduğunuz bayrak, TGOAT{{...}} biçiminde."
+  arg_level: "İpucu düzeyi (1 ile 3 arası). Verilmezse açılmamış ilk düzey gösterilir."
+  arg_lang_code: "Geçilecek dilin kodu, örneğin tr."
+  opt_docker: "Servisi yerel Python süreci yerine Docker ile çalıştırır."
+  opt_port: "Servis için başka bir yerel port kullanır (yalnız yerel kipte)."
+  opt_all: "Oluşturulmuş bütün senaryoları kaldırır."
+  opt_yes: "Onay sormaz."
+  opt_ui_port: "Web arayüzünün yerel portu."
+  opt_no_browser: "Tarayıcıyı kendiliğinden açmaz."
+
+list:
+  title: "TensorGoat senaryoları"
+  col_id: "Kimlik"
+  col_title: "Başlık"
+  col_difficulty: "Zorluk"
+  col_type: "Tür"
+  col_time: "Süre"
+  col_status: "Durum"
+  minutes: "~{n} dk"
+  status_solved: "✓ çözüldü"
+  status_created: "oluşturuldu"
+  status_new: "-"
+  footer: "Başlamak için  [bold]tensorgoat create first_flag[/bold]"
+
+difficulty:
+  intro: "giriş"
+  easy: "kolay"
+  easy-medium: "kolay-orta"
+  medium: "orta"
+
+type:
+  artifact: "dosya"
+  service: "servis"
+
+create:
+  generating: "[bold]{id}[/bold] üretiliyor..."
+  starting_service: "Yerel servis başlatılıyor..."
+  next_steps_title: "Komutlar"
+  workspace: "Çalışma alanı  {path}"
+  service: "Servis         {url}  (yalnız 127.0.0.1 dinlenir)"
+  explore: "Keşif          curl {url}/"
+  hint: "İpucu          tensorgoat hint {slug}"
+  submit: "Bayrak         tensorgoat submit {slug} 'TGOAT{{...}}'"
+  cleanup: "Temizlik       tensorgoat destroy {slug}"
+  ui: "Tarayıcı       tensorgoat ui"
+
+briefing:
+  panel_title: "{id} · {title}"
+  meta: "Zorluk {difficulty} · Tür {type} · Tahmini süre ~{minutes} dk"
+  categories: "Kategoriler"
+  tools: "Önerilen araçlar  {tools}"
+  objectives: "Öğrenecekleriniz"
+
+destroy:
+  done: "[bold]{id}[/bold] kaldırıldı. Servis durdu, çalışma alanı silindi."
+  not_created: "{id} oluşturulmamış, kaldırılacak bir şey yok."
+  nothing: "Oluşturulmuş senaryo yok."
+
+status:
+  title: "Senaryo servisleri"
+  col_id: "Senaryo"
+  col_mode: "Kip"
+  col_url: "Adres"
+  col_pid: "PID"
+  col_state: "Durum"
+  running: "çalışıyor"
+  stopped: "durdurulmuş"
+  none: "Oluşturulmuş senaryo servisi yok. Birini başlatınız.  tensorgoat create model_heist"
+  restart_tip: "Durmuş servis 'tensorgoat create <senaryo>' komutuyla yeniden başlatılır."
+
+hint:
+  panel_title: "İpucu {level}/{total} · {title}"
+  confirm_previous: "İpucu {level}, henüz açmadığınız ipucu {previous} üzerine kuruludur. İpucu {previous} açılsın mı?"
+  declined: "İpucu gösterilmedi."
+  next: "Sıradaki ipucu  tensorgoat hint {slug} {level}"
+  last: "Son ipucu buydu. Çözümün tamamı  tensorgoat walkthrough {slug}"
+
+submit:
+  correct: "[bold green]Doğru.[/bold green] {id} çözüldü."
+  already_solved: "(Bu senaryoyu daha önce çözmüştünüz.)"
+  learn_defense: "Savunmayı öğreniniz.  tensorgoat walkthrough {slug}"
+  incorrect: "[bold red]Bayrak yanlış.[/bold red] Bayraklar TGOAT{{<kısa ad>_<12 onaltılık hane>}} biçimindedir."
+
+walkthrough:
+  confirm_spoiler: "Bu senaryoyu henüz çözmediniz. Çözüm anlatımı çözümün tamamını içerir. Yine de gösterilsin mi?"
+  declined: "Gösterilmedi. İpucu daha azını açık eder.  tensorgoat hint {slug}"
+
+ui_command:
+  started: "TensorGoat web arayüzü [bold]{url}[/bold]  (yalnız 127.0.0.1 dinlenir)"
+  stop: "Kullanırken bu pencereyi açık bırakınız. Durdurmak için Ctrl+C tuşlarına basınız."
+
+lang:
+  active: "Etkin dil [bold]{lang}[/bold]"
+  available: "Kullanılabilir diller {langs}"
+  how_to: "Değiştirmek için  tensorgoat lang <kod>   (tek komut için --lang <kod>)"
+  saved: "Dil [bold]{lang}[/bold] olarak ayarlandı."
+
+reset:
+  confirm: "Bütün servisler durdurulacak ve {path} silinecek (çalışma alanları, ilerleme ve kurulum anahtarı). Devam edilsin mi?"
+  cancelled: "Hiçbir şey silinmedi."
+  done: "TensorGoat sıfırlandı."
+
+errors:
+  unknown_scenario: "'{name}' adında senaryo yok. Senaryoları görmek için 'tensorgoat list' komutunu çalıştırınız."
+  unknown_language: "'{lang}' dili yok. Kullanılabilir diller {langs}"
+  unknown_hint_level: "Bu senaryoda 1 ile {total} arası ipucu düzeyi vardır."
+  destroy_needs_target: "Kaldırılacak senaryoyu yazınız ya da --all kullanınız."
+  port_with_docker: "--port ile --docker birlikte kullanılamaz (Docker portu docker/compose.yml içinde sabittir)."
+  port_in_use: "127.0.0.1 üzerinde {port} portu kullanılıyor. Portu boşaltınız ya da --port ile başka bir port seçiniz."
+  service_failed: "Servis başlatılamadı. Günlüğün son satırları ({log_path})\n{log}"
+  docker_missing: "Docker bulunamadı. Docker'ı kurunuz ya da komutu --docker olmadan çalıştırınız."
+  docker_files_missing: "docker/compose.yml bulunamadı. Docker kipi için TensorGoat deposunun bir kopyası gereklidir."
+  docker_failed: "Servis Docker ile başlatılamadı.\n{log}"
+  service_unreachable: "{port} portundaki servis yanıt vermedi. Yeniden başlatmak için 'tensorgoat create <senaryo>' komutunu çalıştırınız."
+  walkthrough_missing: "{id} için çözüm anlatımı kurulu değil. Çevrimiçi okuyabilirsiniz.  https://github.com/YusufTaha-Kurt/tensorgoat/tree/main/solutions/{id}"
+
+service:
+  invalid_request: "İstek gövdesi bu uç nokta için uygun değil. Beklenen biçim için GET / yanıtına bakınız."
+  rate_limited: "Çok fazla deneme yapıldı. Bir dakika bekleyip yeniden deneyiniz."
+
+# Yerel web arayüzünün metinleri (tensorgoat ui). Yer tutucuları sayfa doldurur.
+# Süslü parantez burada da çift yazılır.
+ui:
+  local_only: "Yalnız bu bilgisayarda çalışır"
+  home: "Genel bakış"
+  scenarios: "Senaryolar"
+  lang_label: "Dil"
+  loading: "Yükleniyor..."
+  progress: "{solved}/{total} çözüldü"
+  minutes: "~{n} dk"
+  copy: "Kopyala"
+  copied: "Kopyalandı."
+  fallback_note: "Bazı metinler bu dilde henüz yok, İngilizce gösteriliyor."
+  status_new: "başlanmadı"
+  status_created: "sürüyor"
+  status_solved: "çözüldü"
+
+  welcome_title: "TensorGoat'a hoş geldiniz"
+  welcome_text: "Her senaryoda içine bilerek zafiyet konmuş küçük bir makine öğrenmesi modeli ya da model dosyası vardır. Zafiyeti bulunuz, bayrağı alınız, sonra gerçek sistemlerde bu saldırının nasıl önlendiğini okuyunuz."
+  start_first: "{title} ile başla"
+  continue_with: "{title} ile sürdür"
+  all_solved: "Bütün senaryolar çözüldü."
+  warning_title: "Bilerek zafiyetli"
+  warning_text: "Senaryo servisleri tasarım gereği zafiyet içerir ve yalnız 127.0.0.1 üzerinde dinler. Servisleri ağa açmayınız."
+  how_title: "Bir senaryo nasıl işler"
+  how_1_title: "Başlatma"
+  how_1_text: "Senaryonun dosyaları çalışma alanında üretilir. Servis senaryolarında küçük bir yerel API de başlatılır."
+  how_2_title: "İnceleme"
+  how_2_text: "Görev tanımını okuyunuz, dosyalara bakınız, istek gönderiniz. Çoğu senaryo birkaç satır Python ile çözülür."
+  how_3_title: "Bayrak"
+  how_3_text: "Bayrak TGOAT{{...}} biçimindedir. Bayrak sekmesine yapıştırıp denetleyiniz."
+  how_4_title: "Savunma"
+  how_4_text: "Her senaryonun sonunda bir çözüm anlatımı ve saldırının nasıl önleneceğini anlatan bir bölüm vardır."
+  tools_title: "Gerekenler"
+  tools_text: "Bir terminal ve Python yeterlidir. numpy, scikit-learn, safetensors ve httpx paketleri TensorGoat ile birlikte kuruldu, betiklerinizde doğrudan kullanabilirsiniz."
+
+  action_start: "Senaryoyu başlat"
+  action_start_hint: "Senaryonun dosyaları çalışma alanında üretilir."
+  action_start_service_hint: "Dosyalar üretilir ve yerel servis başlatılır."
+  action_restart: "Yeniden başlat"
+  action_restart_title: "Dosyalar yeniden üretilir, servis yeniden başlatılır ve sayaçları sıfırlanır. Çalışma alanındaki kendi notlarınız korunur."
+  action_destroy: "Temizle"
+  action_destroy_confirm: "Silmek için yeniden tıklayınız"
+  working_start: "Başlatılıyor..."
+  working_destroy: "Temizleniyor..."
+  started_toast: "Senaryo hazır."
+  destroyed_toast: "Çalışma alanı silindi. İlerlemeniz korundu."
+  workspace: "Çalışma alanı"
+  service: "Servis"
+  service_running: "çalışıyor"
+  service_stopped: "durdurulmuş"
+  service_stopped_tip: "Servis çalışmıyor. Yeniden başlat düğmesini kullanınız."
+
+  tab_briefing: "Görev"
+  tab_files: "Dosyalar"
+  tab_console: "API konsolu"
+  tab_hints: "İpuçları"
+  tab_flag: "Bayrak"
+  tab_defense: "Savunma"
+
+  objectives: "Öğrenecekleriniz"
+  categories: "Kategoriler"
+  tools: "Önerilen araçlar"
+
+  files_empty: "Dosyalar senaryo başlatılınca üretilir."
+  files_intro: "Bu dosyalar çalışma alanınızdadır. Üzerlerinde kendi araçlarınızla çalışınız."
+  files_select: "Önizleme için bir dosya seçiniz."
+  files_binary: "Bu dosya ikili biçimdedir. Çalışma alanından kendi araçlarınızla açınız."
+
+  console_intro: "Senaryonun yerel servisine tek tek istek gönderebilirsiniz. Döngü ve hesap için küçük bir betik yazınız."
+  console_not_running: "Servis çalışmıyor. Önce senaryoyu başlatınız."
+  console_examples: "Örnekler"
+  console_method: "Yöntem"
+  console_path: "Yol"
+  console_body: "JSON gövdesi"
+  console_send: "Gönder"
+  console_response: "Yanıt"
+  console_empty: "Henüz istek gönderilmedi."
+  console_status: "HTTP {status}"
+  console_bad_json: "Gövde JSON olarak okunamadı."
+  console_python: "Aynı isteğin Python karşılığı"
+
+  hints_intro: "İpuçları üç düzeydir ve her biri biraz daha fazlasını açık eder. Önce kendiniz deneyiniz."
+  hints_none: "Henüz ipucu açılmadı."
+  hints_level: "İpucu {level}"
+  hints_show: "İpucu {level}/{total} göster"
+  hints_done: "Son ipucu buydu. Çözümün tamamı Savunma sekmesindedir."
+
+  flag_intro: "Bulduğunuz bayrağı buraya yapıştırınız."
+  flag_placeholder: "TGOAT{{...}}"
+  flag_check: "Bayrağı denetle"
+  flag_correct: "Doğru. Senaryo çözüldü."
+  flag_incorrect: "Bayrak yanlış. Bayraklar TGOAT{{<kısa ad>_<12 onaltılık hane>}} biçimindedir."
+  flag_solved: "Bu senaryoyu çözdünüz."
+  flag_read_defense: "Savunmayı oku"
+
+  defense_locked: "Çözüm anlatımı senaryo çözülünce açılır."
+  defense_locked_text: "Çözüm anlatımı çözümün tamamını ve saldırının nasıl önleneceğini içerir."
+  defense_reveal: "Çözümü yine de göster"
+  defense_reveal_confirm: "Göstermek için yeniden tıklayınız"
+  defense_missing: "Çözüm anlatımı kurulu değil. Deponun solutions klasöründen çevrimiçi okuyabilirsiniz."
+
+  error_forbidden: "İstek kabul edilmedi. Sayfayı yenileyiniz."
+  error_not_found: "Bulunamadı."
+  error_bad_request: "İstek işlenemedi."
+  error_unknown_language: "Bu dil kullanılamıyor."
+  error_network: "TensorGoat arayüzü yanıt vermiyor. 'tensorgoat ui' komutunun çalıştığını denetleyiniz."

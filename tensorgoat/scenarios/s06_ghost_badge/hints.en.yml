@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "A model that recognises badges has to store, in some form, what each badge looks like. This one tells you how strongly any scan resembles each holder's badge, and nothing forces you to scan a real badge. You can invent scans and watch the answers."
+  - level: 2
+    text: "This is a model inversion attack. Treat the vault keyholder's confidence as a score and find out which cells push it up and which push it down. Practise on yourself first: you know your own badge, so you can check whether your method rebuilds it. Be careful with scans the model is already sure about, because a confidence near 1.0 stops moving. Probe from a scan the model is undecided about."
+  - level: 3
+    text: "Start from a uniformly gray scan (every pixel 0.5). Take one cell, send the scan once with that cell set to 1 and once with it set to 0, and compare the keyholder's confidence. Higher with 1 means the cell is punched, otherwise it is blank. Put the cell back to gray and move to the next one. After all 64 cells you have a complete pattern of zeros and ones for /unlock."

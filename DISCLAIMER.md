@@ -1,5 +1,7 @@
 # Disclaimer
 
+**English** · [Türkçe](DISCLAIMER.tr.md)
+
 ## Educational use only
 
 TensorGoat is a training environment. Its purpose is to teach how machine

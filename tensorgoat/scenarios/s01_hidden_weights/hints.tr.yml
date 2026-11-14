@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Ağırlık dosyası yalnız sayılardan oluşmaz. safetensors dosyası, içindeki her şeyi tanımlayan ve insanın okuyabildiği bir başlıkla başlar, biçim serbest metinli üstveriye de izin verir. Dosyanın gerçekte içerdiklerini README dosyasının öne sürdükleriyle karşılaştırınız."
+  - level: 2
+    text: "Başlığı kendiniz okuyunuz. İlk 8 bayt küçük uçlu (little-endian) bir N tam sayısıdır, sonraki N bayt JSON biçimindedir. '__metadata__' girdisine ve tensör adlarıyla boyutlarının listesine bakınız. Python'un json, struct ve base64 modülleri yeterlidir (tensörleri safetensors.numpy.load_file yükler)."
+  - level: 3
+    text: "Üstveri değerlerinden biri base64 ile kodlanmıştır. Çözünüz, bayrağın ilk yarısını verir ve sonra nereye bakacağınızı söyler. Ardından README dosyasındaki 64-32-10 mimarisinin gerek duymadığı tensörü bulunuz. Boyutu hiçbir katmana uymaz, değerleri de yazdırılabilir ASCII aralığındaki tam sayılardır. Her sayıyı karaktere çevirip iki yarıyı birleştiriniz."

@@ -1,0 +1,7 @@
+title: "Gizli Ağırlıklar"
+summary: "Bir modelin safetensors dosyasında hassas bir şey saklanıyor."
+learning_objectives:
+  - "safetensors dosyasının düzeni (başlık uzunluğu, JSON başlık, ham tensör verisi)."
+  - "Model dosyaları üstveri taşır ve bu üstveri kod kadar dikkatle incelenmelidir."
+  - "Dosyayı belgelenmiş mimariyle karşılaştırarak beklenmeyen tensörleri bulma."
+messages: {}

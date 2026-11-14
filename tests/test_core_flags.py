@@ -27,6 +27,10 @@ def test_verify_flag():
     flag = flags.make_flag(secret, "s00_first_flag", "first_flag")
     assert flags.verify_flag(secret, "s00_first_flag", "first_flag", flag)
     assert flags.verify_flag(secret, "s00_first_flag", "first_flag", f"  {flag}\n")
+    # Windows Command Prompt passes single quotes through to the program.
+    for quoted in (f"'{flag}'", f'"{flag}"', f" '{flag}' \n", f"`{flag}`"):
+        assert flags.verify_flag(secret, "s00_first_flag", "first_flag", quoted), quoted
+    assert not flags.verify_flag(secret, "s00_first_flag", "first_flag", f"x{flag}")
     assert not flags.verify_flag(secret, "s00_first_flag", "first_flag", flag[:-2] + "0}")
     assert not flags.verify_flag(secret, "s00_first_flag", "first_flag", "")
     assert not flags.verify_flag(secret, "s01_hidden_weights", "hidden_weights", flag)

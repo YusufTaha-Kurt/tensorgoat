@@ -1,0 +1,7 @@
+title: "Turşu Kavanozu"
+summary: "Güvenilmeyen bir .pkl modelinin yüklenince ne yaptığını, onu yüklemeden kanıtlayınız."
+learning_objectives:
+  - "pickle, GLOBAL ve REDUCE işlem kodlarıyla nasıl kod çalıştırır."
+  - "pickletools (ve fickling gibi araçlar) ile pickle dosyalarının statik analizi."
+  - "safetensors gibi yalnız ağırlık taşıyan biçimler model paylaşmak için neden daha güvenlidir."
+messages: {}

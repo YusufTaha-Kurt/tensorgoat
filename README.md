@@ -1,3 +1,8 @@
+<p align="right">
+  <a href="README.md"><img alt="English (this page)" src="https://img.shields.io/badge/EN-English-2ea44f?style=for-the-badge"></a>
+  <a href="README.tr.md"><img alt="Türkçe" src="https://img.shields.io/badge/TR-T%C3%BCrk%C3%A7e-6e7681?style=for-the-badge"></a>
+</p>
+
 # TensorGoat
 
 **A vulnerable-by-design, scenario-based AI/ML security training ground for beginners.**
@@ -13,7 +18,7 @@
 > to a network. It is for education. See [DISCLAIMER.md](DISCLAIMER.md).
 
 TensorGoat is to machine learning what CloudGoat is to cloud security: you
-create a scenario, get a short briefing, attack a small model or model file,
+start a scenario, get a short briefing, attack a small model or model file,
 capture a flag, and then read how the weakness is prevented in real systems.
 
 ## Why TensorGoat?
@@ -22,37 +27,148 @@ capture a flag, and then read how the weakness is prevented in real systems.
   `numpy` and `scikit-learn`. A laptop with 8 GB of RAM is plenty.
 - **Offline.** After installation nothing is downloaded. All data is synthetic
   or ships with scikit-learn.
+- **Two ways to play.** A local web interface in your browser, or the command
+  line. Both do the same things; use whichever you like.
 - **Readable.** The neural network is a hand-written numpy MLP, so you can
   follow every line, including the gradients you will need.
 - **Attack, then defend.** Every scenario ends with a walkthrough that has a
   *Mitigation / Defense* section. Breaking things is half the lesson.
 - **Deterministic and safe.** Flags are generated per install, nothing harmful
   is ever executed, and every scenario is proven solvable in CI.
+- **English and Turkish.** Interface, briefings, hints and walkthroughs.
 
-## Quick start
+## Installation
+
+You need two things:
+
+| Requirement | How to check | Where to get it |
+|---|---|---|
+| **Python 3.10 or newer** | `python --version` | <https://www.python.org/downloads/> (on Windows tick *Add python.exe to PATH* in the installer) |
+| **Git** | `git --version` | <https://git-scm.com/downloads> |
+
+Then, in a terminal (PowerShell on Windows, Terminal on macOS and Linux):
+
+**1. Download TensorGoat**
+
+```bash
+git clone https://github.com/YusufTaha-Kurt/tensorgoat
+```
+
+```bash
+cd tensorgoat
+```
+
+**2. Create a private Python environment for it**
+
+```bash
+python -m venv .venv
+```
+
+Activate it. This step is needed again in every new terminal window.
+
+| System | Command |
+|---|---|
+| Windows (PowerShell) | `.venv\Scripts\Activate.ps1` |
+| Windows (Command Prompt) | `.venv\Scripts\activate.bat` |
+| macOS, Linux | `source .venv/bin/activate` |
+
+**3. Install**
+
+```bash
+pip install -e .
+```
+
+This downloads the dependencies (about 150 MB, mostly numpy and scikit-learn).
+It is the only step that needs the internet.
+
+**4. Check that it works**
+
+```bash
+tensorgoat list
+```
+
+You should see a table with eight scenarios.
+
+<details>
+<summary>Something went wrong?</summary>
+
+| What you see | What to do |
+|---|---|
+| `python` is not recognised (Windows) | Try `py` instead of `python`, or reinstall Python with *Add python.exe to PATH* ticked. |
+| `python3` exists but `python` does not (macOS, Linux) | Use `python3 -m venv .venv`. After activation `python` works. |
+| PowerShell refuses to run `Activate.ps1` | Use Command Prompt and `.venv\Scripts\activate.bat` instead. |
+| `tensorgoat` is not recognised | The environment is not active in this window. Run the activation command from step 2 again. |
+| `Port ... is already in use` | Another program uses that port. Add `--port 8200` (any free number) to the command. |
+| The installation fails while building a package | Your Python is probably too new or too old for the prebuilt packages. Python 3.10 to 3.13 are tested. |
+
+</details>
+
+<details>
+<summary>Other ways to install</summary>
+
+With [pipx](https://pipx.pypa.io/), without cloning:
 
 ```bash
 pipx install git+https://github.com/YusufTaha-Kurt/tensorgoat
-tensorgoat list
+```
+
+This gives you everything except Docker mode (`--docker`), which needs the
+files of a repository checkout.
+
+Docker is **not** required. It is an optional way to run the scenario services
+in a container: `tensorgoat create <scenario> --docker`.
+
+</details>
+
+## Your first flag
+
+### In the browser
+
+```bash
+tensorgoat ui
+```
+
+Your browser opens `http://127.0.0.1:8100`. Pick **First Flag**, press
+**Start scenario**, and follow the tabs: *Briefing*, *Files*, *Hints*, *Flag*
+and, once you have solved it, *Defence*. Service scenarios get an extra
+*API console* tab for sending requests without curl. Switch between English and
+Turkish with the **EN / TR** buttons in the top right corner. Leave the
+terminal window open while you play; `Ctrl+C` stops the interface.
+
+![The TensorGoat web interface](docs/images/web-ui.png)
+
+### On the command line
+
+```bash
 tensorgoat create first_flag
 ```
 
-Then follow the "Next steps" box: look at the workspace, ask for a hint if you
-are stuck, submit the flag, clean up.
+This prints the briefing and a box with the next commands: where your
+workspace is, how to ask for a hint, how to submit.
 
 ```bash
-tensorgoat hint first_flag            # hints come in three levels
+tensorgoat hint first_flag
+```
+
+```bash
 tensorgoat submit first_flag 'TGOAT{...}'
+```
+
+```bash
+tensorgoat walkthrough first_flag
+```
+
+```bash
 tensorgoat destroy first_flag
 ```
 
-`tgoat` is a short alias for `tensorgoat`. From a clone of this repository,
-`pip install -e .` works as well.
+`tgoat` is a short alias for `tensorgoat`.
 
 <details>
 <summary>All commands</summary>
 
 ```
+tensorgoat ui                             open the local web interface
 tensorgoat list                           all scenarios: id, title, difficulty, type, status
 tensorgoat create <scenario> [--docker]   generate files, start the service, show the briefing
 tensorgoat destroy <scenario> | --all     stop the service, delete the workspace
@@ -60,7 +176,8 @@ tensorgoat status                         running services and their addresses
 tensorgoat hint <scenario> [1|2|3]        tiered hints; each level requires the previous one
 tensorgoat submit <scenario> <flag>       check a flag
 tensorgoat briefing <scenario>            show the briefing again
-tensorgoat lang [<code>]                  show / set the language
+tensorgoat walkthrough <scenario>         the full solution and how to defend (spoilers)
+tensorgoat lang [<code>]                  show / set the language (en, tr)
 tensorgoat reset                          delete everything TensorGoat created
 ```
 
@@ -68,6 +185,25 @@ A scenario can be named by its id (`s02_pickle_jar`) or slug (`pickle_jar`).
 `--lang <code>` selects the language for a single command.
 
 </details>
+
+### What solving a scenario looks like
+
+There is no chatbot to talk to. The targets are small classic machine-learning
+models, and you attack them the way a security tester would: by reading files
+and sending requests.
+
+- **Artifact scenarios** put files into your workspace (a model card, a
+  `.safetensors` file, a `.pkl` file). You analyse them with a text editor and
+  a few lines of Python.
+- **Service scenarios** also start a small HTTP API on your machine. You send
+  it requests, from the API console, with `curl`, or from a short Python
+  script, and work out from the answers how to make it give up the flag.
+
+Each scenario has three hints, from a nudge to an outline. They never contain
+ready-made code. Most scenarios end with a script of 10 to 30 lines that you
+write yourself; `numpy`, `scikit-learn`, `safetensors` and `httpx` are already
+installed for that. Scenarios about chat models and agents belong to the
+intermediate track (see the roadmap).
 
 ## Scenarios
 
@@ -79,18 +215,17 @@ A scenario can be named by its id (`s02_pickle_jar`) or slug (`pickle_jar`).
 | `s03_model_heist` | Model Heist | easy-medium | service | Model theft | ~30 min |
 | `s04_trojan_filter` | Trojan Filter | easy-medium | service | Data poisoning / backdoor | ~40 min |
 | `s05_whos_in_the_data` | Who's in the Data? | easy-medium | service | Membership inference | ~30 min |
+| `s06_ghost_badge` | Ghost Badge | easy-medium | service | Model inversion | ~40 min |
 | `s07_digit_disguise` | Digit Disguise | medium | service | Adversarial examples (white-box) | ~60 min |
 
-*Artifact* scenarios give you files to analyse. *Service* scenarios also start
-a small local HTTP API. Number `s06` is reserved for a scenario that is not
-included yet (see [docs/ROADMAP.md](docs/ROADMAP.md)).
+The scenarios build on each other. Playing them in order is the easiest path.
 
 <details>
 <summary><code>s00_first_flag</code> · First Flag</summary>
 
-Find your way around the CLI, the workspace and flag submission. A model card
-has been dropped into your workspace; model cards often contain more than their
-authors intended.
+Find your way around the interface, the workspace and flag submission. A model
+card has been dropped into your workspace; model cards often contain more than
+their authors intended.
 
 *You will learn:* the TensorGoat workflow, and why you should always read files
 raw.
@@ -161,6 +296,20 @@ Training Data Membership.
 </details>
 
 <details>
+<summary><code>s06_ghost_badge</code> · Ghost Badge</summary>
+
+A lobby badge reader recognises punch-card badges with a small model, and its
+diagnostic mode reports a confidence for every badge holder. Rebuild a badge
+you have never seen from those numbers. All badge data is synthetic.
+
+*You will learn:* model inversion, why confidence scores reveal what the
+training data looks like, and how to limit the leak.
+*Maps to:* OWASP ML03:2023 Model Inversion Attack · MITRE ATLAS Invert AI
+Model.
+
+</details>
+
+<details>
 <summary><code>s07_digit_disguise</code> · Digit Disguise</summary>
 
 A postal facility reads handwritten digits with a neural network, and you have
@@ -179,22 +328,25 @@ Adversarial Data (White-Box Optimization).
 **Flags.** A flag looks like `TGOAT{<slug>_<12 hex>}`. Flags are not stored in
 this repository. On first run TensorGoat creates a secret for your install and
 derives every flag from it (`HMAC-SHA256(secret, scenario_id)`), so your flags
-differ from everyone else's. `tensorgoat submit` checks them locally. This is a
-learning tool, not a competition platform: a determined player can read the
-secret from the state directory. You would only be cheating yourself.
+differ from everyone else's. Flags are checked locally. This is a learning
+tool, not a competition platform: a determined player can read the secret from
+the state directory. You would only be cheating yourself.
 
-**Workspace.** `tensorgoat create` writes the files you work with to
+**Workspace.** Starting a scenario writes the files you work with to
 `~/.tensorgoat/workspace/<scenario>/` (set `TENSORGOAT_HOME` to move the state
 directory). Generation is deterministic: the same install always produces the
-same files, models and flags. `tensorgoat destroy` removes them again; your
-progress (solved scenarios, opened hints) is kept until `tensorgoat reset`.
+same files, models and flags. Cleaning up removes them again; your progress
+(solved scenarios, opened hints) is kept until `tensorgoat reset`.
 
 **Services.** Service scenarios start a small HTTP API as a background process
 on `127.0.0.1` (use `--docker` to run it in a container instead; the port is
 still published on `127.0.0.1` only). The services are vulnerable by design,
-which is exactly why they never listen on other interfaces. Running
-`tensorgoat create <scenario>` again restarts a service and resets its
-counters.
+which is exactly why they never listen on other interfaces. Starting a
+scenario again restarts its service and resets its counters.
+
+**Web interface.** `tensorgoat ui` serves a page on `127.0.0.1:8100` and
+nothing else. It needs no internet, loads no external scripts, and accepts
+requests only from the page it served.
 
 **Hints.** Each scenario has three hints: a conceptual direction, a tool or
 technique, and an "almost there" outline. They never contain ready-made code,
@@ -204,9 +356,19 @@ More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Languages
 
-Currently English. Turkish is coming next. Want to add your language? See
-[docs/TRANSLATING.md](docs/TRANSLATING.md): adding a language means adding
-files, no code changes are needed.
+English and Turkish. Choose in the web interface (EN / TR buttons) or on the
+command line:
+
+```bash
+tensorgoat lang tr
+```
+
+Documentation in Turkish: [README.tr.md](README.tr.md) and the `*.tr.md` files
+next to each English document, plus a glossary of AI security terms in
+[docs/tr/sozluk.md](docs/tr/sozluk.md).
+
+Want to add your language? See [docs/TRANSLATING.md](docs/TRANSLATING.md):
+adding a language means adding files, no code changes are needed.
 
 ## Solutions & walkthroughs
 
@@ -215,17 +377,17 @@ files, no code changes are needed.
 > step-by-step walkthrough for every scenario. Try the hints first.
 
 Every walkthrough ends with a *Mitigation / Defense* section. Read it even if
-you solved the scenario on your own.
+you solved the scenario on your own. The *Defence* tab of the web interface and
+`tensorgoat walkthrough <scenario>` show the same text.
 
 ## Roadmap
 
-1. **Beginner track** (this repository): English, fully local.
-2. **Turkish** language support in this repository, including a glossary of AI
-   security terms.
-3. **Intermediate track**: LLM, agent, MCP and RAG scenarios, in a separate
+1. **Beginner track** (this repository): eight scenarios, fully local, English
+   and Turkish.
+2. **Intermediate track**: LLM, agent, MCP and RAG scenarios, in a separate
    repository with a hosted web version for people whose machines are too
    small.
-4. **Advanced track**.
+3. **Advanced track**.
 
 All tracks are planned to come together under `tensorgoat.dev`. Details:
 [docs/ROADMAP.md](docs/ROADMAP.md).

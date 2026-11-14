@@ -1,5 +1,7 @@
 # Contributing to TensorGoat
 
+**English** · [Türkçe](CONTRIBUTING.tr.md)
+
 Thank you for helping people learn AI/ML security. There are three main ways to
 contribute:
 
@@ -34,6 +36,10 @@ python scripts/i18n_report.py
 `scripts/e2e_check.sh` runs the complete player journey (install, create,
 solve, submit, destroy for every scenario) in a fresh virtual environment.
 
+To look at the web interface while you work on it, run `tensorgoat ui`. Its
+page is three static files in `tensorgoat/web/static/`; reload the browser
+after a change.
+
 ## Ground rules
 
 These come from the project's design principles
@@ -51,6 +57,8 @@ These come from the project's design principles
 8. **Shortcuts closed.** Every scenario has at least one negative test.
 9. **Attack, then defend.** Every walkthrough ends with *Mitigation / Defense*.
 10. **No player-facing text in code.** Texts live in language-suffixed files.
+    This includes the web interface: its page takes every label from the `ui`
+    section of the language catalogue.
 11. **Beginner scope.** This repository contains no LLM, agent, MCP or RAG
     scenarios; those belong to the intermediate track.
 
