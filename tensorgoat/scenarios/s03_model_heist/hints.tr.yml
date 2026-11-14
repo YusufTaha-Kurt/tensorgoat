@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "API yalnız evet ya da hayır demiyor, bir olasılık döndürüyor. Kesin bir sayı, model hakkında bir karardan çok daha fazlasını sızdırır. Özniteliklerin ağırlıklı toplamını olasılığa çeviren basit model ailesi hangisidir?"
+  - level: 2
+    text: "Lojistik regresyonda p = sigmoid(w·x + b) olur. Sigmoid tersine çevrilebilir, logit(p) = ln(p / (1 - p)) = w·x + b. Bu, bilinmeyen ağırlıklar ve sapma için doğrusal bir denklemdir ve x değerini siz seçersiniz."
+  - level: 3
+    text: "Her seferinde tek bilinmeyeni yalnız bırakan girdiler seçiniz. Bütün değerler sıfır gönderilirse geriye yalnız sapma kalır. Tek bir konuma 1, ötekilere sıfır gönderilirse o ağırlık ile sapmanın toplamı elde edilir. Altı sorgu yeter. Sonuçları yuvarlayıp /verify uç noktasına gönderiniz."

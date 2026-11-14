@@ -1,0 +1,12 @@
+title: "Kılık Değiştiren Rakam"
+summary: "Bir rakam sınıflandırıcıya 7'yi 1 olarak okutan çekişmeli bir örnek hazırlayınız."
+learning_objectives:
+  - "Bir sinir ağının kaybının girdiye göre gradyanını elle hesaplama."
+  - "L-sonsuz bütçesi altında hedefli yinelemeli FGSM / PGD."
+  - "Küçük ve sınırlı bozmalar modelleri neden kandırır ve çekişmeli eğitim nasıl yardımcı olur."
+messages:
+  description: "Koli rakam tarayıcısı. POST /scan, özgün koli taramasının epsilon çevresinde kalması gereken 64 piksellik bir tarama kabul eder."
+  out_of_range: "Her piksel {low} ile {high} arasında olmalıdır."
+  epsilon_exceeded: "Tarama bütünlük denetiminden geçemedi. Bir piksel özgün taramadan {epsilon} değerinden fazla farklı."
+  wrong_class: "Tarayıcı bu koliyi {predicted} olarak okudu. Koli {target} numaralı bölmeye yönlendirilmedi."
+  rerouted: "Tarayıcı koliyi {target} olarak okudu. Koli yanlış bölmeye gidiyor."

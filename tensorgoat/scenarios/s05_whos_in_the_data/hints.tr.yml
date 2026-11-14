@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Modeller, eğitildikleri veride hiç görmedikleri veridekinden farklı davranma eğilimindedir. Eğitim kümesini ezberlemiş bir model tam da o kayıtlarda olağandışı ölçüde emindir. Bunu dışarıdan nasıl gözlemleyebilirsiniz?"
+  - level: 2
+    text: "20 adayın özniteliklerini tek tek /predict uç noktasına gönderiniz ve API'nin döndürdüğü güven değerini not ediniz. Kimlikleri /submit_members üzerinden tahmin etmeye çalışmayınız, işe yarar bir şey söylemez ve hız sınırı vardır. Bunun yerine 20 güven değerini birbiriyle karşılaştırınız."
+  - level: 3
+    text: "Adayları güven değerine göre (ya da 'churned' sütununu kullanarak, modelin gerçekten olan sonuca verdiği olasılığa göre) sıralayınız. Beş aday yaklaşık 1.0 güven değeriyle öne çıkar, ötekiler belirgin biçimde düşüktür. Bu beş kimliği birlikte gönderiniz."

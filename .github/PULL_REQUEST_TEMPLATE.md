@@ -18,7 +18,8 @@
 - [ ] `ruff check` and `ruff format --check` pass
 - [ ] `pytest -q` passes
 - [ ] No flag, secret or generated artefact is committed
-- [ ] No player-facing text was added to Python code (texts live in `*.en.*` files)
+- [ ] No player-facing text was added to Python code or to the web page (texts live in
+      `*.en.*` files and in `locales/en.yml`)
 
 **For a new or changed scenario** (see `docs/SCENARIO_AUTHORING.md`):
 
@@ -28,7 +29,9 @@
 - [ ] The walkthrough ends with a *Mitigation / Defense* section
 - [ ] All data is synthetic, and the briefing says so
 - [ ] Tuned parameters are explained in `docs/DECISIONS.md`
-- [ ] README and `solutions/README.md` tables are updated
+- [ ] The scenario tables in `README.md`, `README.tr.md`, `solutions/README.md` and
+      `solutions/README.tr.md` are updated
+- [ ] Turkish texts (`*.tr.*`) are included, or the PR says that they are still missing
 
 **For a translation** (see `docs/TRANSLATING.md`):
 

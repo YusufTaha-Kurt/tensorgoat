@@ -1,5 +1,7 @@
 # Writing a scenario
 
+**English** · [Türkçe](SCENARIO_AUTHORING.tr.md)
+
 A scenario is a folder. Add the folder, its solution and its test, and the
 registry picks it up: no list in code needs editing (the Docker compose file is
 the one exception for service scenarios).
@@ -80,7 +82,8 @@ Rules:
   with numpy.
 - **Self-check.** If solvability depends on a trained model, verify the
   intended solution *and* the closed shortcuts inside `generate`, and retry
-  with `ctx.rng(f"data:{attempt}")` when a seed is unlucky. See S04 and S05.
+  with `ctx.rng(f"data:{attempt}")` when a seed is unlucky. See S04, S05 and
+  S06.
 - **Keep it fast and small:** generation plus service start under 60 seconds,
   every file under 10 MB, under 1 GB of RAM.
 - **Artefact text** (a README in the workspace, a model card) goes into
@@ -103,6 +106,8 @@ def create_app(flag_provider, params, default_lang="en", store=None) -> FastAPI:
 ```
 
 - `GET /` must return `"scenario": <id>`; the runner uses it as health check.
+  If the answer also has `"endpoints"`, the web interface's request console
+  offers them as examples.
 - Human-readable text goes **only** into the `message` field and **only**
   through `texts.message("<key>", lang)`, with the key defined under
   `messages:` in `i18n.en.yml`.
@@ -125,6 +130,10 @@ def create_app(flag_provider, params, default_lang="en", store=None) -> FastAPI:
   technique, 3 = which steps, still without ready-made code.
 - `i18n.en.yml`: `title`, `summary`, `learning_objectives`, `messages`
   (`messages: {}` for artifact scenarios).
+- English is the reference and is required. The project also ships Turkish
+  (`BRIEFING.tr.md`, `hints.tr.yml`, `i18n.tr.yml`, `WALKTHROUGH.tr.md`). If you
+  do not write Turkish, say so in the pull request; the texts fall back to
+  English until someone translates them (see [TRANSLATING.md](TRANSLATING.md)).
 
 ## 6. Solution
 
@@ -184,6 +193,7 @@ python scripts/i18n_report.py
 bash scripts/e2e_check.sh
 ```
 
-Also update: the scenario table in `README.md`, the table in
-`solutions/README.md`, and `docs/DECISIONS.md` if you tuned parameters (write
+Also update: the scenario tables in `README.md` and `README.tr.md`, the tables
+in `solutions/README.md` and `solutions/README.tr.md`, the error code table in
+`docs/ARCHITECTURE.md`, and `docs/DECISIONS.md` if you tuned parameters (write
 down the values, how you measured them and why you chose them).

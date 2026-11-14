@@ -92,8 +92,50 @@ done <<EOF
 $(printf '%s\n' "$SCENARIOS" | tr -d '\r')
 EOF
 
+step "Walkthroughs are part of the installed package"
+ENGLISH="$("$TGOAT" walkthrough first_flag --yes)"
+case "$ENGLISH" in *"Mitigation / Defense"*) ;; *) echo "English walkthrough not shown"; exit 1 ;; esac
+TURKISH="$("$TGOAT" --lang tr walkthrough first_flag --yes)"
+case "$TURKISH" in *"Savunma"*) ;; *) echo "Turkish walkthrough not shown"; exit 1 ;; esac
+echo "walkthroughs: en, tr"
+
+step "Web interface from the installed package"
+UI_PORT="$("$VPY" -c 'import socket; s = socket.socket(); s.bind(("127.0.0.1", 0)); print(s.getsockname()[1])' | tr -d '\r')"
+"$TGOAT" ui --no-browser --port "$UI_PORT" >/dev/null 2>&1 &
+UI_PID=$!
+(cd "$WORK_DIR" && "$VPY" - "$UI_PORT" <<'PY'
+import json
+import re
+import sys
+import time
+import urllib.request
+
+base = f"http://127.0.0.1:{sys.argv[1]}"
+opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+for _ in range(100):
+    try:
+        page = opener.open(base + "/", timeout=2).read().decode("utf-8")
+        break
+    except OSError:
+        time.sleep(0.2)
+else:
+    raise SystemExit("the web interface did not start")
+token = re.search(r'TGOAT_TOKEN = "([^"]+)"', page).group(1)
+for name in ("app.js", "style.css"):
+    assert opener.open(f"{base}/static/{name}", timeout=5).status == 200, name
+request = urllib.request.Request(base + "/api/overview", headers={"X-TGoat-Token": token})
+overview = json.load(opener.open(request, timeout=5))
+assert overview["total"] >= 8 and overview["solved"] == overview["total"], overview["solved"]
+assert set(overview["languages"]) >= {"en", "tr"}
+print(f"web interface: {overview['solved']} of {overview['total']} solved, languages {overview['languages']}")
+PY
+) || UI_FAILED=1
+kill "$UI_PID" 2>/dev/null || true
+wait "$UI_PID" 2>/dev/null || true
+[ -z "${UI_FAILED:-}" ]
+
 step "Summary"
 "$TGOAT" list
 "$TGOAT" status
 echo "scenarios solved end to end: $COUNT"
-[ "$COUNT" -ge 7 ]
+[ "$COUNT" -ge 8 ]

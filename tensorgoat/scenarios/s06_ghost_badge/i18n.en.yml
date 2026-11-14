@@ -1,0 +1,14 @@
+title: "Ghost Badge"
+summary: "Rebuild a secret access badge from a recognition model's confidence scores."
+learning_objectives:
+  - "A model can reveal what its training data looks like (model inversion)."
+  - "Use confidence scores as a signal to reconstruct an input, one feature at a time."
+  - "How coarser outputs, query monitoring and differential privacy limit inversion."
+messages:
+  description: "Halcyon Labs badge reader, diagnostic mode. POST /recognise returns the model's confidence for every badge holder. POST /unlock presents a badge pattern to the vault door."
+  out_of_range: "Every pixel must be between {low} and {high}."
+  invalid_cells: "Send exactly {count} cells, each 0 or 1."
+  budget_exceeded: "Query budget of {budget} exhausted. Run 'tensorgoat create ghost_badge' again to restart the service and reset it."
+  rate_limited: "Too many attempts. Wait a minute before trying the vault door again."
+  access_denied: "Access denied."
+  unlocked: "The vault is open. The model remembered badge {holder}, and its confidence scores gave the pattern away."

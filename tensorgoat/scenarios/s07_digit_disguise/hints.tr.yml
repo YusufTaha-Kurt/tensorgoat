@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Bu büyüklükteki rastgele değişiklikler modeli kandırmaz. Her pikseli en çok etki eden yöne itmeniz gerekir. Ağırlıklar sizdedir, dolayısıyla her pikselin modelin çıktısını tam olarak nasıl etkilediğini hesaplayabilirsiniz. Bu etki bir gradyandır ve ağırlıklara göre değil girdiye göre alınır."
+  - level: 2
+    text: "Fast Gradient Sign Method (FGSM) yöntemini ve onun hedefli, yinelemeli biçimini (çoğunlukla I-FGSM ya da PGD denir) araştırınız. İki katmanlı ağın geri geçişini numpy ile elle yazınız. Sıra şöyledir, çapraz entropili softmax, ikinci katman, ReLU, birinci katman ve en sonda 64 piksel. Gradyanınızı sonlu farklar kestirimiyle karşılaştırınız."
+  - level: 3
+    text: "parcel_7 ile başlayınız. Şu adımları birkaç düzine kez yineleyiniz. Hedef sınıf 1 için çapraz entropi kaybının piksellere göre gradyanını hesaplayınız, her pikseli gradyanının işaretinin tersine küçük bir adım kaydırınız, sonra taramayı özgün taramanın epsilon çevresine ve geçerli piksel aralığına kırpınız. Burada tek büyük adım yetmez, çok sayıda küçük adım yeter."

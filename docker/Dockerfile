@@ -17,6 +17,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 COPY pyproject.toml README.md LICENSE ./
 COPY tensorgoat ./tensorgoat
+COPY solutions ./solutions
 RUN pip install .
 
 RUN useradd --create-home --uid 10001 goat

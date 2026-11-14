@@ -7,7 +7,6 @@ Every text shown to the player comes from the language catalogues (see
 from __future__ import annotations
 
 import sys
-import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -21,7 +20,7 @@ from rich.table import Table
 from rich.text import Text
 
 from tensorgoat import __version__
-from tensorgoat.core import flags, i18n, runner
+from tensorgoat.core import i18n, ops, runner
 from tensorgoat.core.scenario import Scenario, ScenarioNotFound
 from tensorgoat.core.state import State
 from tensorgoat.scenarios import all_scenarios, get_scenario
@@ -103,17 +102,6 @@ def _version_callback(value: bool) -> None:
         raise typer.Exit()
 
 
-def _remove_files(state: State, scenario_id: str) -> None:
-    """Delete workspace and internals; retry while a stopping service holds files."""
-    for _ in range(25):
-        state.remove_scenario_files(scenario_id)
-        if not state.workspace_dir(scenario_id).exists() and not (
-            state.internal_dir(scenario_id).exists()
-        ):
-            return
-        time.sleep(0.2)
-
-
 def _briefing_panel(session: Session, scenario: Scenario) -> Panel:
     texts = session.tr.scenario_texts(scenario.path)
     body = Markdown(session.tr.file_text(scenario.path, "BRIEFING", "md"))
@@ -148,17 +136,14 @@ def _next_steps_panel(session: Session, scenario: Scenario, record: dict[str, An
         url = runner.service_url(int(record["port"]))
         lines.append(session.text("create.service", url=url))
         lines.append(session.text("create.explore", url=url))
-    for key in ("create.hint", "create.submit", "create.cleanup"):
+    for key in ("create.hint", "create.submit", "create.cleanup", "create.ui"):
         lines.append(session.text(key, slug=scenario.slug))
     body = Text.from_markup("\n".join(lines))
     return Panel(body, title=session.tr.t("create.next_steps_title"), border_style="green")
 
 
 def _destroy_one(session: Session, scenario: Scenario) -> None:
-    record = session.state.record(scenario.id)
-    runner.stop(session.state, scenario, record)
-    _remove_files(session.state, scenario.id)
-    session.state.update_record(scenario.id, created=False, mode=None, port=None, pid=None)
+    ops.destroy(session.state, scenario)
     _say(session, "destroy.done", id=scenario.id)
 
 
@@ -223,27 +208,17 @@ def create(
     if docker and port is not None:
         raise _fail(session, "errors.port_with_docker")
 
-    previous = session.state.record(target.id)
-    if target.is_service and previous["created"]:
-        # Creating again restarts the service (and resets its counters).
-        runner.stop(session.state, target, previous)
-
-    _say(session, "create.generating", id=target.id)
-    target.generate(session.state)
-    record = session.state.update_record(target.id, created=True, mode=None, port=None, pid=None)
-
-    if target.is_service:
-        chosen_port = port or int(target.port or 0)
-        _say(session, "create.starting_service")
-        try:
-            pid = runner.start(
-                session.state, target, port=chosen_port, lang=session.tr.lang, docker=docker
-            )
-        except runner.RunnerError as error:
-            raise _fail(session, error.key, **error.details) from None
-        record = session.state.update_record(
-            target.id, mode="docker" if docker else "native", port=chosen_port, pid=pid
+    try:
+        record = ops.create(
+            session.state,
+            target,
+            lang=session.tr.lang,
+            port=port,
+            docker=docker,
+            progress=lambda key: _say(session, key, id=target.id),
         )
+    except runner.RunnerError as error:
+        raise _fail(session, error.key, **error.details) from None
 
     console.print(_briefing_panel(session, target))
     console.print(_next_steps_panel(session, target, record))
@@ -335,7 +310,7 @@ def hint(
     if wanted < total:
         _say(session, "hint.next", slug=target.slug, level=wanted + 1)
     else:
-        _say(session, "hint.last", id=target.id)
+        _say(session, "hint.last", slug=target.slug)
 
 
 @app.command(help=_h("help.submit"))
@@ -346,16 +321,14 @@ def submit(
 ) -> None:
     session = _session(ctx)
     target = _resolve(session, scenario)
-    secret = session.state.install_secret()
-    if not flags.verify_flag(secret, target.id, target.slug, flag):
+    correct, already = ops.submit(session.state, target, flag)
+    if not correct:
         _say(session, "submit.incorrect")
         raise typer.Exit(1)
-    already = session.state.record(target.id)["solved"]
-    session.state.update_record(target.id, solved=True)
     _say(session, "submit.correct", id=target.id)
     if already:
         _say(session, "submit.already_solved")
-    _say(session, "submit.learn_defense", id=target.id)
+    _say(session, "submit.learn_defense", slug=target.slug)
 
 
 @app.command(help=_h("help.briefing"))
@@ -365,6 +338,43 @@ def briefing(
 ) -> None:
     session = _session(ctx)
     console.print(_briefing_panel(session, _resolve(session, scenario)))
+
+
+@app.command(help=_h("help.walkthrough"))
+def walkthrough(
+    ctx: typer.Context,
+    scenario: str = typer.Argument(..., help=_h("help.arg_scenario")),
+    yes: bool = typer.Option(False, "--yes", "-y", help=_h("help.opt_yes")),
+) -> None:
+    session = _session(ctx)
+    target = _resolve(session, scenario)
+    path, fell_back = ops.walkthrough_path(target, session.tr.lang)
+    if path is None:
+        raise _fail(session, "errors.walkthrough_missing", id=target.id)
+    if not session.state.record(target.id)["solved"] and not yes:
+        # The walkthrough gives the whole solution away.
+        if not typer.confirm(session.tr.t("walkthrough.confirm_spoiler"), default=False):
+            _say(session, "walkthrough.declined", slug=target.slug)
+            raise typer.Exit(1)
+    session.tr.fallback_used = session.tr.fallback_used or fell_back
+    console.print(Markdown(path.read_text(encoding="utf-8")))
+
+
+@app.command("ui", help=_h("help.ui"))
+def web_ui(
+    ctx: typer.Context,
+    port: int = typer.Option(8100, "--port", min=1024, max=65535, help=_h("help.opt_ui_port")),
+    no_browser: bool = typer.Option(False, "--no-browser", help=_h("help.opt_no_browser")),
+) -> None:
+    session = _session(ctx)
+    if not runner.port_is_free(port):
+        raise _fail(session, "errors.port_in_use", port=port)
+    # Imported late: only this command needs the web application.
+    from tensorgoat.web import server
+
+    _say(session, "ui_command.started", url=runner.service_url(port))
+    _say(session, "ui_command.stop")
+    server.run(session.state, port=port, lang=session.tr.lang, open_browser=not no_browser)
 
 
 @app.command("lang", help=_h("help.lang"))
@@ -404,7 +414,7 @@ def reset(
         record = session.state.record(scenario.id)
         if record["created"]:
             runner.stop(session.state, scenario, record)
-            _remove_files(session.state, scenario.id)
+            ops.remove_files(session.state, scenario.id)
     # Only remove what TensorGoat created; TENSORGOAT_HOME may hold other files.
     session.state.reset()
     try:

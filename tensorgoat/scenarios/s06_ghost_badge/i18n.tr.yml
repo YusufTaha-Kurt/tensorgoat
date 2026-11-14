@@ -1,0 +1,14 @@
+title: "Hayalet Rozet"
+summary: "Bir tanıma modelinin güven değerlerinden gizli bir giriş rozetini yeniden kurunuz."
+learning_objectives:
+  - "Bir model, eğitim verisinin neye benzediğini ele verebilir (model tersine çevirme)."
+  - "Güven değerlerini işaret olarak kullanıp bir girdiyi öznitelik öznitelik yeniden kurma."
+  - "Daha kaba çıktılar, sorgu izleme ve diferansiyel gizlilik tersine çevirmeyi nasıl sınırlar."
+messages:
+  description: "Halcyon Labs rozet okuyucusu, tanılama kipi. POST /recognise, modelin her rozet sahibi için güven değerini döndürür. POST /unlock, bir rozet desenini kasa kapısına sunar."
+  out_of_range: "Her piksel {low} ile {high} arasında olmalıdır."
+  invalid_cells: "Her biri 0 ya da 1 olan tam {count} hücre gönderiniz."
+  budget_exceeded: "{budget} sorguluk bütçe tükendi. Servisi yeniden başlatıp bütçeyi sıfırlamak için 'tensorgoat create ghost_badge' komutunu çalıştırınız."
+  rate_limited: "Çok fazla deneme yapıldı. Kasa kapısını yeniden denemeden önce bir dakika bekleyiniz."
+  access_denied: "Giriş reddedildi."
+  unlocked: "Kasa açıldı. Model {holder} rozetini hatırlıyordu ve güven değerleri deseni ele verdi."

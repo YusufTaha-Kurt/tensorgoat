@@ -1,5 +1,7 @@
 # Architecture
 
+**English** · [Türkçe](ARCHITECTURE.tr.md)
+
 This document explains how TensorGoat is put together and why. It is written
 for contributors; players do not need it.
 
@@ -10,13 +12,17 @@ tensorgoat/
 │   ├── flags.py           flag derivation and verification
 │   ├── state.py           the state directory (~/.tensorgoat)
 │   ├── scenario.py        Scenario, GenerationContext, Registry
+│   ├── ops.py             create / destroy / submit / walkthrough lookup, shared by CLI and web
 │   ├── runner.py          start/stop services (native process or Docker)
 │   ├── serve.py           process entry point that serves one scenario
 │   ├── servicekit.py      shared service plumbing (StateStore, texts, errors)
 │   ├── i18n.py            language selection, catalogues, English fallback
 │   ├── numpy_nn.py        the hand-written numpy MLP
 │   └── digits.py          shared "train the digit classifier" helper
-├── locales/<lang>.yml     CLI texts
+├── web/
+│   ├── server.py          the local web interface (`tensorgoat ui`)
+│   └── static/            its page: index.html, app.js, style.css (no external assets)
+├── locales/<lang>.yml     CLI and web interface texts
 └── scenarios/sNN_<slug>/  one self-contained folder per scenario
 ```
 
@@ -60,8 +66,8 @@ seed  = HMAC_SHA256(key=install_secret, msg="seed:" + scenario_id)[:8]     (scen
 - `install_secret` is created on first run. If `TENSORGOAT_SEED` is set, the
   secret is derived from it instead (`SHA-256("tensorgoat-install-secret:" +
   seed)`), which makes CI and tests reproducible.
-- `tensorgoat submit` recomputes the flag and compares with
-  `hmac.compare_digest`.
+- The flag check recomputes the flag and compares with
+  `hmac.compare_digest`. Surrounding white space and quotes are ignored.
 - Flags never depend on the language.
 - Some scenarios encode the flag inside an artefact (base64, ASCII codes).
   That encoding happens in `generate.py` at creation time; the repository only
@@ -99,7 +105,7 @@ current time), and the S01 safetensors file is serialised by hand with a sorted
 header. Text files are always written with `\n` newlines.
 
 **Self-checking generators.** Where solvability depends on a trained model
-(S04, S05), `generate.py` verifies the scenario's guarantees (positive *and*
+(S04, S05, S06), `generate.py` verifies the scenario's guarantees (positive *and*
 negative) and deterministically retries with the next random stream if a seed
 is unlucky. This keeps every install solvable while still giving each install
 its own data.
@@ -151,7 +157,7 @@ Shared conventions (`core/servicekit.py`):
 - **Responses.** Machine-readable fields (`flag`, `verdict`, `error_code`, ...)
   are language independent. The human-readable text is always in a separate
   `message` field, chosen from the request's `Accept-Language` header or the
-  service's default language (the CLI starts services with the active
+  service's default language (the front ends start services with the active
   language). Solvers and tests look at `error_code` only, so translations can
   never break them.
 - **`GET /`** describes the API and identifies the scenario (the runner's
@@ -165,14 +171,50 @@ Stable error codes:
 |---|---|---|---|
 | `INVALID_REQUEST` | 422 | all | malformed body |
 | `INVALID_FEATURES` | 422 | S03, S05 | wrong number of features or value out of range |
-| `BUDGET_EXCEEDED` | 429 | S03 | `/score` query budget used up |
+| `BUDGET_EXCEEDED` | 429 | S03, S06 | query budget used up |
 | `INCORRECT` | 400 | S03, S05 | submitted answer is wrong (no partial information) |
 | `SCAM_TEXT_MISSING` | 400 | S04 | the message lacks the scam sentence |
 | `BLOCKED_AS_SPAM` | 400 | S04 | the filter classified the message as spam |
-| `RATE_LIMITED` | 429 | S05 | too many submissions per minute |
-| `OUT_OF_RANGE` | 400 | S07 | a pixel is outside the valid range |
+| `RATE_LIMITED` | 429 | S05, S06 | too many submissions per minute |
+| `ACCESS_DENIED` | 400 | S06 | the presented badge is too far from the real one (no distance given) |
+| `OUT_OF_RANGE` | 400 | S06, S07 | a pixel is outside the valid range |
 | `EPSILON_EXCEEDED` | 400 | S07 | the scan differs too much from the original |
 | `WRONG_CLASS` | 400 | S07 | the model did not predict the target class |
+
+## Web interface
+
+`tensorgoat ui` starts `tensorgoat/web/server.py` on `127.0.0.1:8100` and
+opens the browser. It is a second front end next to the CLI, not a second
+implementation: both call the functions in `core/ops.py`, so a scenario started
+in the browser can be finished on the command line and the other way round.
+
+- **Offline.** The page is three static files without any external script,
+  font or image. A test fails if a network address appears in them.
+- **No text in the page.** `GET /api/overview` sends the `ui` section of the
+  active language catalogue; the script looks texts up by key. Tests check
+  that every key the page uses exists and that no key is unused.
+- **Local only, and only for its own page.** The server binds to `127.0.0.1`.
+  Every `/api` call must carry a random token that is generated per run and
+  embedded in the page, sent in a custom header. Another web site open in the
+  same browser cannot read the token and cannot send the header without a CORS
+  preflight, which is never answered. Requests whose `Host` header is not
+  `127.0.0.1` or `localhost` are rejected, which stops DNS rebinding.
+- **Request console.** For service scenarios the page can send single requests
+  to the scenario's service. The browser cannot do that itself (different
+  port, no CORS headers on the services), so the interface forwards them
+  through `runner.call_service`. The target host is fixed to `127.0.0.1`; the
+  caller only supplies a path that must start with `/`.
+- **Workspace files** are listed, and small text files can be previewed. The
+  path is resolved and must stay inside the scenario's workspace.
+- **Rendered Markdown** (briefing, walkthrough) is produced on the server with
+  raw HTML disabled. Everything else is inserted as escaped text.
+- **Walkthroughs** are locked until the scenario is solved; the player can
+  reveal them earlier with an explicit second click. The files are found in a
+  repository checkout (`solutions/`) or inside an installed package
+  (`tensorgoat/_solutions`, added to the wheel by `force-include`).
+
+This interface is for one player on their own machine. It is unrelated to the
+hosted version described below.
 
 ## Portability to the web
 
@@ -193,12 +235,15 @@ See [TRANSLATING.md](TRANSLATING.md) for the translator's view. The mechanics:
 
 - Language priority: `--lang` > `TENSORGOAT_LANG` > `config.yml` > `en`. The
   system locale is deliberately ignored.
-- Available languages are discovered from `locales/*.yml`.
+- Available languages are discovered from `locales/*.yml`. English and Turkish
+  are complete, and a test fails if either lacks a file or a key.
 - Missing files and missing keys fall back to English silently; the CLI prints
   one dim note per command when that happened.
 - `tests/test_i18n.py` enforces that the English files are complete, that
   `cli.py` and every `service.py` pass no string literal to `print`, that a fake
   language falls back correctly and that flags do not change with the language.
+  `tests/test_translations.py` checks that translations keep placeholders,
+  markup, commands and the structure of the walkthroughs.
 
 ## Tests
 
@@ -206,4 +251,5 @@ Every scenario has its own test module with the same categories:
 `test_generate_deterministic`, `test_solve` (create → `solve.py` → submit →
 destroy with a real service process), `test_unintended_*` (negative tests),
 `test_service_contract` and `test_resource_budget`. Global tests cover the
-registry, i18n, the CLI, "no plaintext flags" and the safety rules.
+registry, i18n, the CLI, the web interface, "no plaintext flags" and the safety
+rules.

@@ -40,7 +40,13 @@ WALKTHROUGH_SECTIONS = (
 )
 # Scenarios whose artefacts or services contain synthetic records about "people"
 # or organisations: their briefing must say so explicitly (design principle 7).
-SYNTHETIC_DATA = {"s00_first_flag", "s03_model_heist", "s04_trojan_filter", "s05_whos_in_the_data"}
+SYNTHETIC_DATA = {
+    "s00_first_flag",
+    "s03_model_heist",
+    "s04_trojan_filter",
+    "s05_whos_in_the_data",
+    "s06_ghost_badge",
+}
 SOLVER_DEPENDENCIES = {"numpy", "sklearn", "safetensors", "httpx"}
 
 SCENARIOS = all_scenarios()
@@ -49,7 +55,7 @@ by_id = pytest.mark.parametrize("scenario", SCENARIOS, ids=lambda s: s.id)
 
 def test_scenarios_are_discovered_in_order():
     ids = [scenario.id for scenario in SCENARIOS]
-    assert len(ids) >= 7
+    assert len(ids) >= 8
     assert ids == sorted(ids)
     assert ids[0] == "s00_first_flag"
     assert len({scenario.slug for scenario in SCENARIOS}) == len(ids)

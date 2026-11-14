@@ -64,12 +64,13 @@ def _catalogue_keys_used_in(source: str) -> set[str]:
     keys = set(re.findall(pattern, source))
     keys |= set(re.findall(r"""RunnerError\(\s*["']([a-z_]+\.[a-z_]+)["']""", source))
     keys |= set(re.findall(r"""["'](create\.[a-z_]+)["']""", source))
+    keys |= set(re.findall(r"""notify\(\s*["']([a-z_]+\.[a-z_]+)["']""", source))
     return keys
 
 
 def test_english_catalogue_has_every_key_the_code_uses():
     used: set[str] = set()
-    for path in (PACKAGE / "cli.py", PACKAGE / "core" / "runner.py"):
+    for path in (PACKAGE / "cli.py", PACKAGE / "core" / "runner.py", PACKAGE / "core" / "ops.py"):
         used |= _catalogue_keys_used_in(path.read_text(encoding="utf-8"))
     used |= {f"difficulty.{name}" for name in DIFFICULTIES}
     used |= {f"type.{name}" for name in TYPES}

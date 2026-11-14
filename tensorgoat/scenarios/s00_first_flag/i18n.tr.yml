@@ -1,0 +1,7 @@
+title: "İlk Bayrak"
+summary: "Komut satırını, çalışma alanını ve bayrak göndermeyi tanıyınız."
+learning_objectives:
+  - "TensorGoat iş akışı (oluşturma, çalışma alanını inceleme, ipucu, bayrak gönderme, kaldırma)."
+  - "Model kartları ve başka üstveriler, yazarlarının paylaşmak istemediği bilgileri sızdırabilir."
+  - "Dosyalar her zaman ham hâliyle okunmalıdır, işlenmiş önizleme içeriği gizler."
+messages: {}

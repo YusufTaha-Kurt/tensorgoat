@@ -197,16 +197,18 @@ class Translator:
         if self.lang != DEFAULT_LANG:
             self._local = load_yaml(directory / f"{self.lang}.yml")
 
-    def t(self, key: str, **values: Any) -> str:
-        """Translate ``key``; ``values`` fill ``{placeholders}`` in the text."""
+    def raw(self, key: str) -> str:
+        """The catalogue text of ``key`` as written, placeholders not filled in."""
         text = lookup(self._local, key) if self.lang != DEFAULT_LANG else None
         if text in (None, ""):
             if self.lang != DEFAULT_LANG:
                 self.fallback_used = True
             text = lookup(self._english, key)
-        if text is None:
-            return key
-        return format_text(str(text), values)
+        return key if text is None else str(text)
+
+    def t(self, key: str, **values: Any) -> str:
+        """Translate ``key``; ``values`` fill ``{placeholders}`` in the text."""
+        return format_text(self.raw(key), values)
 
     def file_text(self, directory: Path, stem: str, suffix: str) -> str:
         path, fell_back = localized_path(directory, stem, suffix, self.lang)

@@ -1,0 +1,7 @@
+hints:
+  - level: 1
+    text: "Rozet tanıyan bir model, her rozetin neye benzediğini bir biçimde saklamak zorundadır. Bu model, herhangi bir taramanın her rozet sahibinin rozetine ne kadar benzediğini söylüyor ve sizi gerçek bir rozet okutmaya zorlayan bir şey yok. Tarama uydurup yanıtları izleyebilirsiniz."
+  - level: 2
+    text: "Bu bir model tersine çevirme (model inversion) saldırısıdır. Kasa yetkilisinin güven değerini bir puan gibi düşününüz ve hangi hücrelerin onu yükselttiğini, hangilerinin düşürdüğünü bulunuz. Önce kendinizde deneyiniz. Kendi rozetinizi bildiğiniz için yönteminizin onu yeniden kurup kurmadığını görebilirsiniz. Modelin zaten emin olduğu taramalara dikkat ediniz, 1.0 dolayındaki güven değeri artık kıpırdamaz. Yoklamayı modelin kararsız olduğu bir taramadan başlatınız."
+  - level: 3
+    text: "Tümüyle gri bir taramayla başlayınız (her piksel 0.5). Bir hücre seçiniz, taramayı bir kez o hücre 1 iken, bir kez de 0 iken gönderiniz ve kasa yetkilisinin güven değerlerini karşılaştırınız. Değer 1 iken daha yüksekse hücre deliktir, değilse boştur. Hücreyi yeniden griye döndürüp sıradakine geçiniz. 64 hücrenin sonunda /unlock için sıfır ve birlerden oluşan eksiksiz bir desen elde edersiniz."

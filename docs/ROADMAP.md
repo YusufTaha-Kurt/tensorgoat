@@ -1,27 +1,28 @@
 # Roadmap
 
+**English** · [Türkçe](ROADMAP.tr.md)
+
 TensorGoat grows in tracks. Each track is usable on its own.
 
-## 1a. Beginner track, English (this repository) — current
+## 1. Beginner track (this repository), current
 
 Scenario-based AI/ML security basics that run entirely on a laptop: reading
 model metadata, model file forensics, unsafe serialisation, model extraction,
-data poisoning, membership inference and adversarial examples.
+data poisoning, membership inference, model inversion and adversarial examples.
+
+Done:
+
+- eight scenarios (`s00` to `s07`), each with hints, a solver and a walkthrough,
+- English and Turkish texts, `README.tr.md`, Turkish versions of all documents
+  and a glossary of AI security terms (`docs/tr/sozluk.md`),
+- a local web interface (`tensorgoat ui`) next to the command line.
 
 Open items in this track:
 
-- **`s06` scenario.** The number is reserved for a planned scenario about
-  input manipulation against a text filter. It is not included yet.
 - Publish to PyPI. The name `tensorgoat` was free when checked on 2026-11-13
   (<https://pypi.org/project/tensorgoat/>); check again right before publishing.
-
-## 1b. Turkish language support (this repository)
-
-- Turkish briefings, hints, walkthroughs and CLI texts, `README.tr.md`.
-- An English–Turkish glossary of AI security terms (`docs/tr/sozluk.md`).
-
-The infrastructure is already in place: adding the language means adding
-files. See [TRANSLATING.md](TRANSLATING.md).
+- More languages. Adding one means adding files, see
+  [TRANSLATING.md](TRANSLATING.md).
 
 ## 2. Intermediate track (separate repository)
 

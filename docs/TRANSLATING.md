@@ -1,9 +1,12 @@
 # Translating TensorGoat
 
+**English** · [Türkçe](TRANSLATING.tr.md)
+
 You do not need to read or write Python to add a language. A language is a set
 of files next to the English ones. TensorGoat finds them automatically.
 
-This guide uses Turkish (`tr`) as the example. Replace `tr` with your
+This guide uses Turkish (`tr`) as the example; the Turkish translation is
+complete and shows what a finished language looks like. Replace `tr` with your
 language's two-letter code (ISO 639-1, lower case).
 
 ## 1. Files to create
@@ -14,9 +17,13 @@ Copy each English file, rename the copy, translate its content.
 
 | Copy this | To this | What it contains |
 |---|---|---|
-| `tensorgoat/locales/en.yml` | `tensorgoat/locales/tr.yml` | every text the `tensorgoat` command prints |
+| `tensorgoat/locales/en.yml` | `tensorgoat/locales/tr.yml` | every text the `tensorgoat` command prints, and the `ui` section with the texts of the web interface |
 | `README.md` | `README.tr.md` | the project introduction |
 | *(new file)* | `docs/tr/sozluk.md` | glossary, see section 5 |
+| other documents, for example `CONTRIBUTING.md`, `docs/ARCHITECTURE.md` | `CONTRIBUTING.tr.md`, `docs/ARCHITECTURE.tr.md` | optional; the report does not ask for them |
+
+Add your language to the switch at the top of `README.md` and link the
+translated documents to each other.
 
 Creating `tensorgoat/locales/tr.yml` is what makes the language appear in
 `tensorgoat lang`.
@@ -63,6 +70,7 @@ Run it without `--lang` to check all languages. It always succeeds; add
 tensorgoat --lang tr list             # one command in Turkish
 tensorgoat lang tr                    # switch permanently
 tensorgoat lang en                    # and back
+tensorgoat ui                         # the web interface offers every language
 ```
 
 ## 4. Translation rules
@@ -115,8 +123,7 @@ use the same words:
   explanation
 - add a term the first time you have to decide how to translate it
 
-The glossary itself is not written yet for any language; this section only
-fixes the rule and the location.
+The Turkish glossary (`docs/tr/sozluk.md`) can serve as a model.
 
 ## 6. What stays English on purpose
 
@@ -125,8 +132,10 @@ Some things are part of the exercise and are the same for every player:
 - **The warning printed by the `pickle_jar` file.** It is stored inside the
   pickle's bytecode.
 - **Datasets and model files:** the training data of `trojan_filter`, the scam
-  sentence that scenario asks you to deliver, model cards and READMEs inside a
-  workspace. The models were trained on English text.
+  sentence that scenario asks you to deliver, model cards, READMEs and notes
+  inside a workspace. The models were trained on English text.
+- **Titles used as commands.** A scenario's title is translated, its slug is
+  not: players type `tensorgoat create ghost_badge` in every language.
 - **Machine-readable service fields:** `error_code` values such as
   `BUDGET_EXCEEDED`, verdicts such as `spam` / `ham`. Only the `message` field
   of a service response is translated.
