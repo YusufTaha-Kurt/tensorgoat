@@ -80,8 +80,8 @@ seed  = HMAC_SHA256(key=install_secret, msg="seed:" + scenario_id)[:8]     (sena
 **Bilinen ve kabul edilmiş sınır.** Yerel kurulumda kararlı bir oyuncu
 `config.yml` dosyasını (ya da `internal/` klasörünü) okuyup hiçbir şey çözmeden
 bayrakları hesaplayabilir. Bu sorun değildir: *bu bir öğrenme aracıdır, yarışma
-ortamı değildir.* Orta düzey bölüm için planlanan barındırılan sürüm,
-bayrakları sunucuda oturum başına türetir.
+ortamı değildir.* İleride barındırılan bir sürüm yapılırsa bayrakları sunucuda
+oturum başına türetir.
 
 ## Senaryolar
 
@@ -226,7 +226,8 @@ barındırılan sürümle ilgisi yoktur.
 
 ## Web'e taşınabilirlik
 
-Orta düzey bölüm için barındırılan bir sürüm planlanıyor. Burada bunun hiçbir
+Barındırılan bir sürüm ileriye planlanıyor, zor düzey bitmeden gündeme
+gelmeyecek (bakınız [ROADMAP.tr.md](ROADMAP.tr.md)). Burada bunun hiçbir
 parçası yapılmadı, ama kod onu engelleyecek kararlardan kaçınır:
 
 | Kural | Barındırma için önemi |

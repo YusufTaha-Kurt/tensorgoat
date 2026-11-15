@@ -76,8 +76,8 @@ seed  = HMAC_SHA256(key=install_secret, msg="seed:" + scenario_id)[:8]     (scen
 **Known and accepted limitation.** On a local install a determined player can
 read `config.yml` (or `internal/`) and compute the flags without solving
 anything. That is fine: *this is a learning tool, not a competition platform.*
-The hosted version planned for the intermediate track derives flags per session
-on the server instead.
+A hosted version, if one is built later, derives flags per session on the
+server instead.
 
 ## Scenarios
 
@@ -218,8 +218,9 @@ hosted version described below.
 
 ## Portability to the web
 
-A hosted version is planned for the intermediate track. Nothing of it is built
-here, but the code avoids decisions that would block it:
+A hosted version is planned for later; it is not on the agenda before the hard
+level is finished (see [ROADMAP.md](ROADMAP.md)). Nothing of it is built here,
+but the code avoids decisions that would block it:
 
 | Rule | Why it matters for hosting |
 |---|---|

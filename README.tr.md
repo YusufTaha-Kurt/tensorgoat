@@ -215,7 +215,7 @@ Her senaryoda, küçük bir yönlendirmeden yol taslağına uzanan üç ipucu va
 İpuçları hazır kod içermez. Çoğu senaryo, kendi yazdığınız 10 ile 30 satır
 arası bir betikle biter. `numpy`, `scikit-learn`, `safetensors` ve `httpx`
 bunun için kurulu gelir. Sohbet modelleri ve ajanlarla ilgili senaryolar orta
-düzey bölümün konusudur (yol haritasına bakınız).
+düzeyin konusudur (yol haritasına bakınız).
 
 ## Senaryolar
 
@@ -401,13 +401,17 @@ Her çözüm anlatımı *Önlem / Savunma* bölümüyle biter. Senaryoyu kendini
 
 ## Yol haritası
 
-1. **Başlangıç bölümü** (bu depo). Sekiz senaryo, tümüyle yerel, Türkçe ve
-   İngilizce.
-2. **Orta düzey bölüm.** LLM, ajan, MCP ve RAG senaryoları. Ayrı bir depoda
-   olacak ve bilgisayarı yetersiz olanlar için web üzerinde de sunulacak.
-3. **İleri düzey bölüm.**
+TensorGoat dört düzeyli bir yoldur ve her düzey ayrı bir depodadır.
 
-Bütün bölümlerin `tensorgoat.dev` altında toplanması planlanıyor. Ayrıntı için
+1. **Kolay düzey** (bu depo). Klasik modeller üzerinde sekiz senaryo, tümüyle
+   yerel, Türkçe ve İngilizce. Tamamlandı.
+2. **Orta düzey** (`tensorgoat-middle`, hazırlanıyor). Simüle edilmiş,
+   belirlenimci bir modelle LLM, ajan, MCP ve RAG senaryoları.
+3. **Zor düzey.** Aynı tür sistemler, bu kez küçük bir yerel LLM ile.
+4. **İleri düzey.** En zor senaryolar. Hedef, API üzerinden ulaşılan güncel
+   bir büyük modeldir.
+
+Bütün düzeylerin `tensorgoat.dev` altında toplanması planlanıyor. Ayrıntı için
 [docs/ROADMAP.tr.md](docs/ROADMAP.tr.md).
 
 ## Katkı
