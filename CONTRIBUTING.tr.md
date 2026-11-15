@@ -62,7 +62,7 @@ Bunlar projenin tasarım ilkelerinden gelir (gerekçeler
     arayüzü de buna dahildir. Sayfa her etiketi dil kataloğunun `ui`
     bölümünden alır.
 11. **Başlangıç düzeyi.** Bu depoda LLM, ajan, MCP ya da RAG senaryosu yoktur.
-    Onlar orta düzey bölümün konusudur.
+    Onlar orta düzeyin (`tensorgoat-middle`) konusudur.
 
 ## Commit ve değişiklik istekleri
 

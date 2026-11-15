@@ -203,7 +203,7 @@ Each scenario has three hints, from a nudge to an outline. They never contain
 ready-made code. Most scenarios end with a script of 10 to 30 lines that you
 write yourself; `numpy`, `scikit-learn`, `safetensors` and `httpx` are already
 installed for that. Scenarios about chat models and agents belong to the
-intermediate track (see the roadmap).
+middle level (see the roadmap).
 
 ## Scenarios
 
@@ -382,14 +382,17 @@ you solved the scenario on your own. The *Defence* tab of the web interface and
 
 ## Roadmap
 
-1. **Beginner track** (this repository): eight scenarios, fully local, English
-   and Turkish.
-2. **Intermediate track**: LLM, agent, MCP and RAG scenarios, in a separate
-   repository with a hosted web version for people whose machines are too
-   small.
-3. **Advanced track**.
+TensorGoat is a path of four levels, each in its own repository.
 
-All tracks are planned to come together under `tensorgoat.dev`. Details:
+1. **Easy level** (this repository): eight scenarios on classic models, fully
+   local, English and Turkish. Done.
+2. **Middle level** (`tensorgoat-middle`, in preparation): LLM, agent, MCP and
+   RAG scenarios with a simulated, deterministic model.
+3. **Hard level**: the same kinds of systems with a small local LLM.
+4. **Advanced level**: the hardest scenarios, against a frontier model reached
+   through an API.
+
+All levels are planned to come together under `tensorgoat.dev`. Details:
 [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Contributing

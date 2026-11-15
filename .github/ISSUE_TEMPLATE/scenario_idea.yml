@@ -6,8 +6,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        This repository is the **beginner** track. LLM, agent, MCP and RAG ideas belong to the
-        intermediate track (separate repository). See docs/SCENARIO_AUTHORING.md for the rules.
+        This repository is the **easy** level. LLM, agent, MCP and RAG ideas belong to the
+        middle level (separate repository). See docs/SCENARIO_AUTHORING.md for the rules.
   - type: input
     id: title
     attributes:

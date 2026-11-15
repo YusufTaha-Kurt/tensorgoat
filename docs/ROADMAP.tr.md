@@ -2,14 +2,17 @@
 
 [English](ROADMAP.md) · **Türkçe**
 
-TensorGoat bölümler hâlinde büyür. Her bölüm tek başına kullanılabilir.
+TensorGoat dört düzeyli bir yoldur. Düzeyler kolay, orta, zor ve ileridir. Her
+düzey ayrı bir depoda durur ve tek başına kullanılabilir. Bir düzeye, önceki
+düzey bitince başlanır.
 
-## 1. Başlangıç bölümü (bu depo), şimdiki durum
+## 1. Kolay düzey (bu depo), tamamlandı
 
 Tümüyle bir dizüstü bilgisayarda çalışan, senaryo tabanlı yapay zekâ ve makine
 öğrenmesi güvenliği temelleri. Konular model üstverisini okuma, model dosyası
 incelemesi, güvensiz serileştirme, model çıkarma, veri zehirleme, üyelik
-çıkarımı, model tersine çevirme ve çekişmeli örneklerdir.
+çıkarımı, model tersine çevirme ve çekişmeli örneklerdir. Hedefler numpy ve
+scikit-learn ile kurulmuş küçük, klasik modellerdir.
 
 Tamamlananlar
 
@@ -19,7 +22,7 @@ Tamamlananlar
   yapay zekâ güvenliği terimleri sözlüğü (`docs/tr/sozluk.md`),
 - komut satırının yanında yerel bir web arayüzü (`tensorgoat ui`).
 
-Bu bölümde açık kalan işler
+Bu düzeyde açık kalan işler
 
 - PyPI üzerinde yayımlama. `tensorgoat` adı 13 Kasım 2026 günü bakıldığında
   boştu (<https://pypi.org/project/tensorgoat/>). Yayımlamadan hemen önce
@@ -27,21 +30,27 @@ Bu bölümde açık kalan işler
 - Başka diller. Dil eklemek dosya eklemek demektir, bakınız
   [TRANSLATING.tr.md](TRANSLATING.tr.md).
 
-## 2. Orta düzey bölüm (ayrı depo)
+## 2. Orta düzey (ayrı depo, `tensorgoat-middle`), hazırlanıyor
 
-- LLM, ajan, MCP ve RAG güvenliği senaryoları. Bunların hiçbiri başlangıç
-  deposuna eklenmeyecek.
-- Bilgisayarı yetersiz olanların da katılabilmesi için web üzerinde sunulan bir
-  sürüm. Başlangıç servisleri şimdiden bu düşünülerek yazıldı (bakınız
-  [ARCHITECTURE.tr.md](ARCHITECTURE.tr.md) içindeki "Web'e taşınabilirlik"
-  bölümü).
+- LLM, ajan, MCP ve RAG güvenliği senaryoları. Konu, modelin çevresine kurulan
+  uygulamanın güven sınırlarıdır. Bunların hiçbiri bu depoya eklenmeyecek.
+- Senaryolar simüle edilmiş, belirlenimci bir modelle konuşur. Böylece kolay
+  düzeyin kuralları korunur. Yalnız işlemci kullanılır, internet gerekmez ve
+  her senaryonun çözülebildiği kanıtlanır.
 
-## 3. İleri düzey bölüm
+## 3. Zor düzey
 
-- GitHub'da ve web üzerinde sunulan ileri düzey senaryolar.
-- Projeyi bağışla desteklemenin bir yolu.
+- Aynı tür sistemler, bu kez döngüde gerçek bir model vardır. Bu, yerelde
+  çalışan küçük bir LLM'dir.
+
+## 4. İleri düzey
+
+- En zor senaryolar. Hedef, API üzerinden ulaşılan güncel bir büyük modeldir.
 
 ## Hepsinin buluştuğu yer
 
-Üç bölümün de `tensorgoat.dev` altında yer alması planlanıyor. Bu depoda bir web
-sitesi yoktur.
+Bütün düzeylerin, projeyi bağışla desteklemenin bir yoluyla birlikte
+`tensorgoat.dev` altında yer alması planlanıyor. Web üzerinde sunulan bir sürüm,
+zor düzey bitmeden gündeme gelmeyecek. Bu deponun servisleri şimdiden bu
+düşünülerek yazıldı (bakınız [ARCHITECTURE.tr.md](ARCHITECTURE.tr.md) içindeki
+"Web'e taşınabilirlik" bölümü). Bu depoda bir web sitesi yoktur.

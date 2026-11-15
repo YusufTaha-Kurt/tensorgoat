@@ -60,7 +60,7 @@ These come from the project's design principles
     This includes the web interface: its page takes every label from the `ui`
     section of the language catalogue.
 11. **Beginner scope.** This repository contains no LLM, agent, MCP or RAG
-    scenarios; those belong to the intermediate track.
+    scenarios; those belong to the middle level (`tensorgoat-middle`).
 
 ## Commits and pull requests
 
